@@ -1,0 +1,2643 @@
+<!DOCTYPE html>
+<html lang="id">
+ <head>
+  <meta charset="utf-8"/>
+  <!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=09acdd14-455e-4190-b291-a010c558b9c6
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+  <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+  <meta content="dark light" name="color-scheme"/>
+  <meta content="#000000" media="(prefers-color-scheme: dark)" name="theme-color"/>
+  <meta content="#ffffff" media="(prefers-color-scheme: light)" name="theme-color"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+  <title>
+   Dev Deploy
+  </title>
+  <meta content="noindex, nofollow, noarchive, nosnippet, noimageindex" name="robots"/>
+  <style>
+   :root{
+    color-scheme:light;
+    /* ===== Dev Deploy: White & Blue Theme ===== */
+    --bg:#ffffff;--panel:#f0f6ff;--text:#0f172a;--dim:#334155;--muted:#64748b;--line:#bfdbfe;--hi:#1d4ed8;
+    --btn-bg:#2563eb;--btn-fg:#ffffff;--p1:#2563eb;--p2:#0ea5e9;
+    --ok:#15803d;--warn:#b45309;--err:#dc2626;--on-ok:#fff;--on-err:#fff;
+    --ok-bg:rgba(21,128,61,.08);--warn-bg:rgba(180,83,9,.08);--err-bg:rgba(220,38,38,.07);
+    --ok-line:rgba(21,128,61,.35);--warn-line:rgba(180,83,9,.35);--err-line:rgba(220,38,38,.35);
+    --scrim:rgba(0,0,0,.42);--lift:rgba(37,99,235,.06);
+    /* alias */
+    --bg0:var(--bg);--glass:var(--panel);--glass-hi:var(--panel);--border:var(--line);--border-hi:var(--muted);
+    --red:var(--hi);--red-soft:var(--p1);--crimson:var(--p2);--ember:var(--p1);--rose:var(--p2);
+    --fg:var(--text);--fg-dim:var(--dim);
+    --r:12px;--r-sm:8px;--ease:cubic-bezier(.22,1,.36,1);--spring:cubic-bezier(.34,1.56,.64,1);
+    --sans:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{margin:0;min-height:100vh;font-family:var(--sans);color:var(--text);background:var(--bg);overflow-x:hidden;
+    padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+    -webkit-font-smoothing:antialiased;letter-spacing:-.005em;font-size:15px;line-height:1.55;}
+  .bg,.grain,.scan{display:none;}
+  .wrap{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:16px 16px 110px;
+    border-left:1px solid var(--line);border-right:1px solid var(--line);min-height:100vh;}
+  .glass{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);}
+  .topbar{display:flex;align-items:center;gap:10px;padding:12px 14px;margin-bottom:14px;position:sticky;top:8px;z-index:30;background:var(--bg);}
+  .brand{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
+  .mark{width:36px;height:36px;border-radius:9px;flex:none;background:var(--btn-bg);color:var(--btn-fg);display:grid;place-items:center;
+    font:700 15px var(--sans);}
+  .mark b{display:block;}
+  .brand-info{flex:1;min-width:0;}
+  .brand-info h1{font:600 16px var(--sans);margin:0 0 1px;letter-spacing:-.02em;color:var(--hi);}
+  .brand-info .tag{font:11px var(--mono);color:var(--muted);display:flex;align-items:center;gap:7px;}
+  .brand-info .tag .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2.2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .net-chip,.acct-chip{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 6px;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;user-select:none;transition:border-color .2s var(--ease);flex:none;}
+  .net-chip:hover,.acct-chip:hover{border-color:var(--muted);}
+  .net-chip.offline{border-color:var(--err-line);background:var(--err-bg);}
+  .net-chip.offline .net-icon{color:var(--err);}
+  .net-chip.slow{border-color:var(--warn-line);background:var(--warn-bg);}
+  .net-chip.slow .net-icon{color:var(--warn);}
+  .net-chip .net-icon{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;border:1px solid var(--line);color:var(--ok);flex:none;}
+  .net-chip .net-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+  .net-chip .net-info{display:flex;flex-direction:column;gap:1px;min-width:0;}
+  .net-chip .net-type{font:600 11px var(--mono);color:var(--text);line-height:1.1;}
+  .net-chip .net-speed{font:10px var(--mono);color:var(--muted);line-height:1.1;white-space:nowrap;}
+  .acct-chip .av,.acct-row .av{width:26px;height:26px;border-radius:7px;background:var(--btn-bg);color:var(--btn-fg);
+    display:grid;place-items:center;font:700 11px var(--sans);flex:none;}
+  .acct-chip span.lbl{font:12px var(--mono);color:var(--dim);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tabbar{display:flex;gap:4px;padding:4px;margin-bottom:18px;position:relative;overflow-x:auto;scrollbar-width:none;}
+  .tabbar::-webkit-scrollbar{display:none;}
+  .tabbar button{position:relative;z-index:2;flex:1;min-width:80px;border:none;background:transparent;color:var(--muted);
+    font:500 13px var(--sans);padding:10px 8px;border-radius:var(--r-sm);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;transition:color .25s var(--ease);}
+  .tabbar button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .tabbar button.active{color:var(--btn-fg);}
+  .tab-indicator{position:absolute;top:4px;bottom:4px;left:4px;border-radius:var(--r-sm);z-index:1;background:var(--btn-bg);
+    transition:left .55s var(--spring),width .55s var(--spring);}
+  .pane{display:none;}
+  .pane.active{display:block;}
+  @keyframes paneIn{from{opacity:0;transform:translate3d(0,8px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+  h2{font:600 19px var(--sans);margin:2px 0 14px;letter-spacing:-.03em;color:var(--hi);}
+  .muted{color:var(--muted);font-size:12.5px;}
+  .card{padding:18px;margin-bottom:14px;}
+  .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap;}
+  .empty-state{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:44px 20px;color:var(--dim);}
+  .empty-state .ic{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--line);color:var(--muted);}
+  .empty-state .ic svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .btn{appearance:none;border:1px solid var(--line);background:transparent;color:var(--text);padding:10px 16px;border-radius:var(--r-sm);
+    font:500 13px var(--sans);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;user-select:none;
+    transition:border-color .2s var(--ease),background .2s var(--ease),transform .15s var(--ease);}
+  .btn:hover{border-color:var(--muted);}
+  .btn:active{transform:scale(.97);}
+  .btn:focus-visible,input:focus-visible,select:focus-visible,.tabbar button:focus-visible{outline:2px solid var(--p1);outline-offset:2px;}
+  .btn.primary{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--btn-bg);}
+  .btn.primary:hover{opacity:.88;}
+  .btn.ghost{background:transparent;}
+  .btn.danger{color:var(--err);border-color:var(--err-line);background:var(--err-bg);}
+  .btn.danger:hover{border-color:var(--err);}
+  .btn.warn{color:var(--warn);border-color:var(--warn-line);background:var(--warn-bg);}
+  .btn.warn:hover{border-color:var(--warn);}
+  .btn.block{width:100%;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+  .btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;}
+  input[type=text],input[type=password],select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);
+    padding:11px 13px;border-radius:var(--r-sm);font:13.5px var(--sans);outline:none;}
+  input::placeholder{color:var(--muted);}
+  input:focus,select:focus{border-color:var(--hi);}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font:12px var(--mono);color:var(--muted);margin-bottom:7px;}
+  .grid{display:grid;grid-template-columns:1fr;gap:12px;}
+  @media(min-width:600px){.grid{grid-template-columns:1fr 1fr;}}
+  .proj{padding:16px;transition:border-color .25s var(--ease);animation:cardIn .4s var(--ease) backwards;position:relative;overflow:hidden;}
+  .proj:hover{border-color:var(--muted);}
+  .proj.selected{border-color:var(--hi);background:var(--lift);}
+  .proj.paused{border-color:var(--warn-line);background:var(--warn-bg);}
+  .proj.paused .pname .sw{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:none;}
+  @keyframes cardIn{from{opacity:0;transform:translate3d(0,10px,0);}to{opacity:1;transform:translate3d(0,0,0);}}
+  .proj .sel-box{position:absolute;top:14px;right:14px;width:24px;height:24px;border-radius:7px;border:1px solid var(--muted);
+    background:var(--bg);display:grid;place-items:center;cursor:pointer;transition:transform .45s var(--spring),opacity .25s var(--ease),background .2s var(--ease),border-color .2s var(--ease);z-index:2;opacity:0;transform:scale(.5);pointer-events:none;}
+  body.select-mode .proj .sel-box{opacity:1;transform:scale(1);pointer-events:auto;}
+  .proj.selected .sel-box{background:var(--btn-bg);border-color:var(--btn-bg);}
+  .proj .sel-box svg{width:14px;height:14px;stroke:var(--btn-fg);fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .2s var(--ease);}
+  .proj.selected .sel-box svg{opacity:1;}
+  .proj .pname{font:600 14.5px var(--sans);display:flex;align-items:center;gap:9px;margin-bottom:8px;word-break:break-word;color:var(--hi);transition:padding-right .3s var(--ease);}
+  body.select-mode .proj .pname{padding-right:36px;}
+  .proj .pname .sw{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);flex:none;animation:pulse 2.2s ease-in-out infinite;}
+  .proj .pdomain{font:12px var(--mono);color:var(--p1);text-decoration:none;word-break:break-all;display:block;margin-bottom:14px;}
+  .proj .pdomain:hover{text-decoration:underline;}
+  .proj .pdate{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px 0;margin-bottom:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .proj .pdate>div{display:flex;flex-direction:column;gap:3px;min-width:0;}
+  .proj .pdate .k{font:10.5px var(--mono);color:var(--muted);}
+  .proj .pdate .v{font:500 12px var(--mono);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .proj .pactions{display:flex;gap:8px;flex-wrap:wrap;}
+  .proj .pactions .btn{padding:8px 12px;font-size:12px;flex:1;min-width:60px;}
+  .limit-card{padding:16px 18px;margin-bottom:16px;}
+  .limit-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap;}
+  .limit-head .ttl{display:flex;align-items:center;gap:9px;font:600 14px var(--sans);color:var(--hi);}
+  .limit-head .ttl svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;}
+  .plan,.limit-head .plan{font:11px var(--mono);padding:3px 10px;border-radius:99px;color:var(--dim);border:1px solid var(--line);}
+  .limit-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+  @media(min-width:560px){.limit-grid{grid-template-columns:repeat(3,1fr);}}
+  .limit-item{padding:11px 13px;border-radius:var(--r-sm);background:var(--bg);border:1px solid var(--line);}
+  .limit-item .lb{display:flex;justify-content:space-between;font:500 12px var(--sans);color:var(--dim);margin-bottom:9px;gap:6px;}
+  .limit-item .lb b{color:var(--text);}
+  .limit-item .lb span:last-child{color:var(--muted);font:11px var(--mono);}
+  .limit-bar{height:3px;border-radius:99px;background:var(--line);overflow:hidden;}
+  .limit-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--p1),var(--p2));transition:width .8s var(--ease);}
+  .limit-bar-fill.warn{background:var(--warn);}
+  .limit-bar-fill.err{background:var(--err);}
+  .dropzone{border:1px dashed var(--muted);border-radius:var(--r);padding:36px 20px;text-align:center;cursor:pointer;transition:all .25s var(--ease);background:var(--bg);}
+  .dropzone:hover{border-color:var(--hi);}
+  .dropzone.drag{border-color:var(--p1);border-style:solid;background:var(--lift);}
+  .dropzone .dz-ic{width:52px;height:52px;margin:0 auto 14px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;color:var(--text);}
+  .dropzone .dz-ic svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+  .dz-actions{display:flex;gap:9px;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+  .filelist-wrap{margin-top:14px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;animation:paneIn .3s var(--ease);}
+  .filelist-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line);}
+  .filelist-head .fl-title{font:600 13px var(--sans);color:var(--hi);}
+  .filelist-head .fl-count{font:11px var(--mono);color:var(--muted);margin-top:2px;}
+  .filelist-head .fl-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .filelist-head .fl-actions .btn{padding:6px 11px;font-size:11.5px;}
+  .filelist{max-height:170px;overflow-y:auto;font:11.5px var(--mono);color:var(--dim);display:flex;flex-direction:column;gap:4px;}
+  .filelist .fi{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--panel);border:1px solid var(--line);border-radius:7px;}
+  .filelist .fi-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);}
+  .filelist .fi-size{color:var(--muted);flex:none;font-size:10.5px;}
+  .filelist .fi-remove{width:24px;height:24px;border-radius:6px;border:1px solid var(--err-line);background:var(--err-bg);color:var(--err);
+    font-size:14px;font-weight:700;line-height:1;display:grid;place-items:center;cursor:pointer;flex:none;}
+  .filelist .fi-remove:active{transform:scale(.88);}
+  .deploy-stage{display:none;animation:paneIn .35s var(--ease);}
+  .deploy-stage.show{display:block;}
+  .progress-track{height:3px;border-radius:99px;background:var(--line);overflow:hidden;margin:10px 0;}
+  .progress-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--p1),var(--p2));transition:width .5s var(--ease);}
+  .progress-row{display:flex;justify-content:space-between;font:12px var(--mono);color:var(--dim);margin-top:6px;}
+  .log-term{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;font:12px/1.7 var(--mono);color:var(--dim);max-height:200px;overflow-y:auto;margin-top:14px;}
+  .success-box{text-align:center;padding:28px 12px 10px;}
+  .success-ring{width:72px;height:72px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--ok-line);background:var(--ok-bg);animation:ringPop .65s var(--spring);}
+  @keyframes ringPop{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .success-ring svg{width:34px;height:34px;stroke:var(--ok);fill:none;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;}
+  .batch-bar{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 12px;}
+  .batch-bar button{flex:1;min-width:64px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--line);background:transparent;color:var(--dim);
+    font:500 12.5px var(--mono);cursor:pointer;transition:all .2s var(--ease);}
+  .batch-bar button:hover{border-color:var(--muted);color:var(--text);}
+  .batch-bar button.active{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--btn-bg);}
+  .batch-slots{display:grid;grid-template-columns:1fr;gap:8px;max-height:300px;overflow-y:auto;margin-top:10px;padding-right:4px;}
+  @media(min-width:560px){.batch-slots{grid-template-columns:1fr 1fr;}}
+  .slot{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--bg);font-size:12px;transition:border-color .25s var(--ease);}
+  .slot .sidx{width:22px;height:22px;border-radius:6px;flex:none;display:grid;place-items:center;border:1px solid var(--line);font:10px var(--mono);color:var(--muted);}
+  .slot .sname{flex:1;min-width:0;font:11.5px var(--mono);color:var(--p1);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .slot .sname:hover{text-decoration:underline;}
+  .slot .sstate{font:10.5px var(--mono);padding:2px 8px;border-radius:99px;flex:none;}
+  .slot .sstate.idle{color:var(--muted);border:1px solid var(--line);}
+  .slot .sstate.run{color:var(--warn);background:var(--warn-bg);}
+  .slot .sstate.ok{color:var(--ok);background:var(--ok-bg);}
+  .slot .sstate.err{color:var(--err);background:var(--err-bg);}
+  .slot.done{border-color:var(--ok-line);}
+  .slot.err{border-color:var(--err-line);}
+  .batch-summary{display:flex;gap:12px;flex-wrap:wrap;font:12px var(--mono);color:var(--dim);margin:12px 0 4px;}
+  .batch-summary span b{color:var(--text);font-weight:600;}
+  .batch-url-list{max-height:240px;overflow-y:auto;margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+  .batch-url-list a{font:11.5px var(--mono);color:var(--text);text-decoration:none;padding:10px 13px;background:var(--bg);border:1px solid var(--line);
+    border-radius:var(--r-sm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:border-color .2s var(--ease);}
+  .batch-url-list a:hover{border-color:var(--hi);}
+  .batch-url-list a.err{color:var(--err);border-color:var(--err-line);background:var(--err-bg);}
+  .sel-toolbar{position:fixed;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;max-width:968px;margin:0 auto;
+    padding:12px 14px;display:none;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--muted);border-radius:var(--r);
+    box-shadow:0 18px 50px -12px rgba(0,0,0,.45);animation:toolbarIn .35s var(--ease);}
+  .sel-toolbar.show{display:flex;}
+  @keyframes toolbarIn{from{opacity:0;transform:translate3d(0,20px,0);}to{opacity:1;transform:translate3d(0,0,0);}}
+  .sel-toolbar .info{flex:1;min-width:0;}
+  .sel-toolbar .info .ttl{font:600 13px var(--sans);color:var(--hi);}
+  .sel-toolbar .info .sub{font:11px var(--mono);color:var(--muted);margin-top:2px;}
+  .sel-toolbar .btn{padding:9px 13px;font-size:12px;}
+  @media(max-width:540px){.sel-toolbar{flex-direction:column;align-items:stretch;}.sel-toolbar .info{text-align:center;}.sel-toolbar .btn{width:100%;}}
+  .modal-overlay{position:fixed;inset:0;z-index:200;background:var(--scrim);display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .3s var(--ease);}
+  .modal-overlay.open{display:flex;opacity:1;}
+  .confirm-box{width:min(440px,100%);padding:26px 24px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.6);transform:translate3d(0,16px,0) scale(.9);opacity:0;transition:transform .55s var(--spring),opacity .3s var(--ease);}
+  .modal-overlay.open .confirm-box{transform:none;opacity:1;}
+  .confirm-box .warn-ic{width:56px;height:56px;margin:0 auto 16px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--err-line);background:var(--err-bg);}
+  .confirm-box .warn-ic svg{width:28px;height:28px;stroke:var(--err);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .confirm-box h3{margin:0 0 8px;font:600 17px var(--sans);letter-spacing:-.02em;color:var(--hi);}
+  .confirm-box p{margin:0 0 20px;font-size:13px;color:var(--dim);line-height:1.65;}
+  .confirm-box .row{display:flex;gap:10px;}
+  .confirm-box .row .btn{flex:1;}
+  .net-detail{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 0;}
+  .net-detail .nd{padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);}
+  .net-detail .nd .k{font:10.5px var(--mono);color:var(--muted);margin-bottom:5px;}
+  .net-detail .nd .v{font:500 13px var(--mono);color:var(--text);word-break:break-word;}
+  .overlay{position:fixed;inset:0;z-index:100;background:var(--scrim);display:none;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .3s var(--ease);padding:0;}
+  .overlay.open{display:flex;opacity:1;}
+  @media(min-width:640px){.overlay{align-items:center;padding:20px;}}
+  .modal{position:relative;width:100%;max-width:460px;padding:22px;border-radius:18px 18px 0 0;transform:translate3d(0,100%,0);transition:transform .45s var(--ease);}
+  .overlay.open .modal{transform:none;}
+  @media(min-width:640px){
+    .modal{border-radius:16px;transform:translate3d(0,20px,0) scale(.97);opacity:0;transition:transform .4s var(--ease),opacity .4s var(--ease);}
+    .overlay.open .modal{transform:none;opacity:1;}
+  }
+  .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;}
+  .modal-head h3{margin:0;font:600 16px var(--sans);flex:1;min-width:0;color:var(--hi);}
+  .xbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--dim);display:grid;place-items:center;cursor:pointer;transition:all .2s var(--ease);flex:none;}
+  .xbtn:hover{border-color:var(--err-line);color:var(--err);}
+  .xbtn:active{transform:scale(.9);}
+  .xbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;pointer-events:none;}
+  .acct-menu-list{margin:10px 0;}
+  .acct-row{display:flex;align-items:center;gap:11px;padding:10px;border-radius:var(--r-sm);cursor:pointer;transition:background .2s var(--ease);border:1px solid transparent;}
+  .acct-row:hover{background:var(--lift);}
+  .acct-row.cur{border-color:var(--hi);}
+  .acct-row .av{width:30px;height:30px;font-size:12px;}
+  .acct-row .ai{flex:1;min-width:0;}
+  .acct-row .an{font:600 13px var(--sans);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .acct-row .at{font:10.5px var(--mono);color:var(--muted);}
+  .acct-row .rm{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;color:var(--muted);flex:none;transition:all .2s var(--ease);}
+  .acct-row .rm:hover{color:var(--err);background:var(--err-bg);}
+  .acct-row .rm svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;pointer-events:none;}
+  .verify-visual{display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px 0 8px;}
+  .verify-ring{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;position:relative;}
+  .spinner{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--hi);animation:spin .8s linear infinite;}
+  .verify-ring.ok{background:var(--ok-bg);}
+  .verify-ring.ok svg{width:30px;height:30px;stroke:var(--ok);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
+  .verify-ring.err{background:var(--err-bg);}
+  .verify-ring.err svg{width:28px;height:28px;stroke:var(--err);fill:none;stroke-width:3;stroke-linecap:round;}
+  .verify-text{font-size:12.5px;color:var(--dim);text-align:center;}
+  .dep-row{display:flex;align-items:center;gap:13px;padding:13px;border-radius:var(--r-sm);border:1px solid var(--line);margin-bottom:8px;background:var(--bg);transition:border-color .2s var(--ease);}
+  .dep-row:hover{border-color:var(--muted);}
+  .badge{font:11px var(--mono);padding:4px 10px;border-radius:99px;flex:none;display:flex;align-items:center;gap:6px;}
+  .badge .d{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;}
+  .badge.ready{color:var(--ok);background:var(--ok-bg);}
+  .badge.error{color:var(--err);background:var(--err-bg);}
+  .badge.building{color:var(--warn);background:var(--warn-bg);}
+  .badge.building .d{animation:pulse 1s ease-in-out infinite;}
+  .dep-row .dmeta{flex:1;min-width:0;}
+  .dep-row .durl{font:500 12.5px var(--mono);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .dep-row .dtime{font:11px var(--mono);color:var(--muted);margin-top:3px;}
+  .toastwrap{position:fixed;left:0;right:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:300;display:flex;flex-direction:column;align-items:center;gap:9px;pointer-events:none;}
+  .toast{padding:11px 18px;border-radius:10px;font:500 13px var(--sans);max-width:88vw;background:var(--btn-bg);color:var(--btn-fg);
+    animation:toastIn .5s var(--spring),toastOut .4s var(--ease) 2.6s forwards;box-shadow:0 14px 40px -14px rgba(0,0,0,.6);}
+  .toast.ok{background:var(--ok);color:var(--on-ok);}
+  .toast.err{background:var(--err);color:var(--on-err);}
+  .toast.info{background:var(--btn-bg);color:var(--btn-fg);}
+  @keyframes toastIn{from{opacity:0;transform:translate3d(0,18px,0) scale(.85);}to{opacity:1;transform:none;}}
+  @keyframes toastOut{to{opacity:0;transform:translate3d(0,8px,0) scale(.97);}}
+  .fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:40;width:54px;height:54px;border-radius:14px;
+    border:1px solid var(--btn-bg);background:var(--btn-bg);color:var(--btn-fg);display:grid;place-items:center;cursor:pointer;
+    box-shadow:0 12px 30px -8px rgba(0,0,0,.5);transition:transform .2s var(--ease);}
+  .fab:hover{transform:translateY(-2px);}
+  .fab:active{transform:scale(.92);}
+  .fab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;pointer-events:none;}
+  .gh-userbox{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);}
+  .gh-userbox img{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);}
+  .gh-repo{padding:16px;transition:border-color .25s var(--ease);animation:cardIn .4s var(--ease) backwards;}
+  .gh-repo:hover{border-color:var(--muted);}
+  .gh-repo .rn{font:600 14px var(--sans);display:flex;align-items:center;gap:8px;margin-bottom:6px;word-break:break-word;flex-wrap:wrap;color:var(--hi);}
+  .gh-repo .rn svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;flex:none;}
+  .gh-repo .rd{font-size:12px;color:var(--dim);margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px;}
+  .gh-repo .rmeta{display:flex;flex-wrap:wrap;gap:10px;font:11px var(--mono);color:var(--muted);margin-bottom:12px;padding:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .gh-repo .rmeta span{display:flex;align-items:center;gap:5px;}
+  .gh-repo .rmeta span svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;}
+  .gh-repo .pactions{display:flex;gap:8px;flex-wrap:wrap;}
+  .gh-repo .pactions .btn{padding:8px 12px;font-size:12px;flex:1;min-width:70px;}
+  .gh-loading{display:flex;justify-content:center;padding:40px 20px;}
+  @media (max-width:640px){
+    .wrap{padding:12px 12px 110px;}
+    .topbar{padding:10px;gap:8px;}
+    .mark{width:32px;height:32px;font-size:13px;}
+    .brand-info h1{font-size:14px;}
+    .brand-info .tag{font-size:10px;}
+    .acct-chip span.lbl{max-width:60px;font-size:11px;}
+    .net-chip{padding:5px 8px 5px 5px;}
+    .net-chip .net-icon{width:24px;height:24px;}
+    .tabbar button{font-size:12px;min-width:70px;padding:10px 6px;}
+    .tabbar button svg{width:13px;height:13px;}
+    .proj{padding:14px;}
+    .proj .pdate{gap:8px;}
+    .proj .pdate .v{font-size:11px;}
+    .proj .pactions .btn{padding:7px 9px;font-size:11.5px;min-width:50px;}
+    .dropzone{padding:28px 14px;}
+  }
+  @media (max-width:520px){
+    .net-chip .net-info{display:none;}
+    .net-chip{padding:5px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important;}
+  }
+
+  /* ===== ANIMASI HALUS ===== */
+  @keyframes rise{from{opacity:0;transform:translate3d(0,14px,0);}to{opacity:1;transform:translate3d(0,0,0);}}
+  @keyframes pop{from{opacity:0;transform:scale(0);}to{opacity:1;transform:scale(1);}}
+  .pane.active>*{animation:rise .55s var(--ease) backwards;}
+  .pane.active>*:nth-child(1){animation-delay:0ms;}
+  .pane.active>*:nth-child(2){animation-delay:60ms;}
+  .pane.active>*:nth-child(3){animation-delay:120ms;}
+  .pane.active>*:nth-child(4){animation-delay:180ms;}
+  .pane.active>*:nth-child(5){animation-delay:240ms;}
+  .pane.active>*:nth-child(6){animation-delay:300ms;}
+  .pane.active>*:nth-child(n+7){animation-delay:360ms;}
+  :is(.dep-row,.slot,.fi,.limit-item,.batch-url-list a,.acct-row,.empty-state){animation:rise .5s var(--ease) backwards;}
+  .dep-row:nth-child(1),.slot:nth-child(1),.fi:nth-child(1),.limit-item:nth-child(1),.batch-url-list a:nth-child(1),.acct-row:nth-child(1),.empty-state:nth-child(1){animation-delay:0ms;}
+  .dep-row:nth-child(2),.slot:nth-child(2),.fi:nth-child(2),.limit-item:nth-child(2),.batch-url-list a:nth-child(2),.acct-row:nth-child(2),.empty-state:nth-child(2){animation-delay:55ms;}
+  .dep-row:nth-child(3),.slot:nth-child(3),.fi:nth-child(3),.limit-item:nth-child(3),.batch-url-list a:nth-child(3),.acct-row:nth-child(3),.empty-state:nth-child(3){animation-delay:110ms;}
+  .dep-row:nth-child(4),.slot:nth-child(4),.fi:nth-child(4),.limit-item:nth-child(4),.batch-url-list a:nth-child(4),.acct-row:nth-child(4),.empty-state:nth-child(4){animation-delay:165ms;}
+  .dep-row:nth-child(5),.slot:nth-child(5),.fi:nth-child(5),.limit-item:nth-child(5),.batch-url-list a:nth-child(5),.acct-row:nth-child(5),.empty-state:nth-child(5){animation-delay:220ms;}
+  .dep-row:nth-child(6),.slot:nth-child(6),.fi:nth-child(6),.limit-item:nth-child(6),.batch-url-list a:nth-child(6),.acct-row:nth-child(6),.empty-state:nth-child(6){animation-delay:275ms;}
+  .dep-row:nth-child(7),.slot:nth-child(7),.fi:nth-child(7),.limit-item:nth-child(7),.batch-url-list a:nth-child(7),.acct-row:nth-child(7),.empty-state:nth-child(7){animation-delay:330ms;}
+  .dep-row:nth-child(8),.slot:nth-child(8),.fi:nth-child(8),.limit-item:nth-child(8),.batch-url-list a:nth-child(8),.acct-row:nth-child(8),.empty-state:nth-child(8){animation-delay:385ms;}
+  .dep-row:nth-child(9),.slot:nth-child(9),.fi:nth-child(9),.limit-item:nth-child(9),.batch-url-list a:nth-child(9),.acct-row:nth-child(9),.empty-state:nth-child(9){animation-delay:440ms;}
+  .dep-row:nth-child(10),.slot:nth-child(10),.fi:nth-child(10),.limit-item:nth-child(10),.batch-url-list a:nth-child(10),.acct-row:nth-child(10),.empty-state:nth-child(10){animation-delay:495ms;}
+  .dep-row:nth-child(11),.slot:nth-child(11),.fi:nth-child(11),.limit-item:nth-child(11),.batch-url-list a:nth-child(11),.acct-row:nth-child(11),.empty-state:nth-child(11){animation-delay:550ms;}
+  .dep-row:nth-child(12),.slot:nth-child(12),.fi:nth-child(12),.limit-item:nth-child(12),.batch-url-list a:nth-child(12),.acct-row:nth-child(12),.empty-state:nth-child(12){animation-delay:605ms;}
+  .dep-row:nth-child(n+13),.slot:nth-child(n+13),.fi:nth-child(n+13),.limit-item:nth-child(n+13),.batch-url-list a:nth-child(n+13),.acct-row:nth-child(n+13),.empty-state:nth-child(n+13){animation-delay:660ms;}
+  .empty-state .ic{animation:pop .6s var(--spring) .1s backwards;}
+  .fab{animation:pop .6s var(--spring) .3s backwards;}
+  .badge,.plan{animation:pop .5s var(--spring) backwards;}
+
+  /* accordion tinggi otomatis */
+  .pan{display:grid;grid-template-rows:1fr;transition:grid-template-rows .5s var(--ease);}
+  .pan>div{overflow:hidden;min-height:0;}
+  .limit-card .limit-head{cursor:pointer;user-select:none;transition:margin-bottom .5s var(--ease);}
+  .limit-card.collapsed .pan{grid-template-rows:0fr;}
+  .limit-card.collapsed .limit-head{margin-bottom:0;}
+  .limit-head .chev{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .5s var(--ease);flex:none;}
+  .limit-card.collapsed .chev{transform:rotate(-90deg);}
+  .limit-head .rt{display:flex;align-items:center;gap:10px;}
+
+  /* ring progress deploy */
+  .ring-wrap{display:flex;justify-content:center;margin:8px 0 6px;}
+  .ring{width:112px;height:112px;position:relative;flex:none;}
+  .ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .ring circle{fill:none;stroke-width:7;stroke-linecap:round;}
+  .ring .tr{stroke:var(--line);}
+  .ring .fl{stroke:url(#ringGrad);stroke-dasharray:289;stroke-dashoffset:289;transition:stroke-dashoffset .6s var(--ease);}
+  .ring b{position:absolute;inset:0;display:grid;place-items:center;font:600 24px var(--sans);color:var(--hi);font-variant-numeric:tabular-nums;}
+
+  /* ===== NAV BAWAH (Android) + alat ===== */
+  :root{--nav:calc(64px + env(safe-area-inset-bottom,0px));}
+  .wrap{padding-bottom:calc(var(--nav) + 100px);}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;max-width:1000px;margin:0 auto;overflow:visible;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding:0 6px env(safe-area-inset-bottom,0px);
+    border-radius:16px 16px 0 0;border-bottom:0;background:var(--panel);box-shadow:0 -10px 30px -18px rgba(0,0,0,.5);}
+  .tabbar button{min-width:0;height:64px;flex-direction:column;gap:4px;padding:10px 2px 8px;border-radius:0;font:500 11px var(--sans);letter-spacing:0;color:var(--muted);}
+  .tabbar button svg{width:21px;height:21px;}
+  .tabbar button.active{color:var(--hi);}
+  .tabbar button.active svg{animation:pop .45s var(--spring);}
+  .tab-indicator{top:0;bottom:auto;height:2px;background:transparent;border-radius:0;}
+  .tab-indicator::after{content:"";display:block;width:30px;height:2px;margin:0 auto;border-radius:0 0 3px 3px;background:var(--hi);}
+  .fab{bottom:calc(var(--nav) + 16px);}
+  .sel-toolbar{bottom:calc(var(--nav) + 12px);}
+  .toastwrap{bottom:calc(var(--nav) + 12px);}
+  .btn.ok{color:var(--ok);border-color:var(--ok-line);background:var(--ok-bg);}
+  .btn.ok:hover{border-color:var(--ok);}
+  .seg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;margin-bottom:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);}
+  .seg button{position:relative;z-index:2;border:0;background:transparent;color:var(--muted);font:500 13px var(--sans);padding:10px 4px;border-radius:9px;cursor:pointer;transition:color .25s var(--ease);}
+  .seg button.active{color:var(--btn-fg);}
+  .seg button:focus-visible{outline:2px solid var(--p1);outline-offset:2px;}
+  .seg-ind{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 16px)/3);border-radius:9px;background:var(--btn-bg);z-index:1;transition:transform .5s var(--spring);}
+  .subpane{display:none;}
+  .subpane.active{display:block;animation:rise .45s var(--ease);}
+  @media(max-width:640px){
+    .actbar{display:grid !important;grid-template-columns:1fr 1fr;gap:8px !important;width:100%;}
+    .actbar .btn{width:100%;}
+    #btnSelectMode{order:1;}#btnRefreshProjects{order:2;}#btnPauseAll{order:3;}#btnResumeAll{order:4;}
+    #btnDeleteAll{order:5;grid-column:span 2;}
+    .card-head{align-items:stretch;}
+  }
+  ::selection{background:var(--p1);color:#000;}
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--muted);}
+  </style>
+ </head>
+ <body>
+  <div class="wrap">
+   <div class="topbar glass">
+    <div class="brand">
+     <div class="mark">
+      <b>
+       D
+      </b>
+     </div>
+     <div class="brand-info">
+      <h1>
+       Dev Deploy
+      </h1>
+      <div class="tag">
+       <span class="dot">
+       </span>
+       <span>
+        vercel · production
+       </span>
+      </div>
+     </div>
+    </div>
+    <div class="net-chip" id="netChip" title="klik untuk detail">
+     <div class="net-icon" id="netIcon">
+      <svg viewbox="0 0 24 24">
+       <path d="M5 12.55a11 11 0 0 1 14.08 0">
+       </path>
+       <path d="M1.42 9a16 16 0 0 1 21.16 0">
+       </path>
+       <path d="M8.53 16.11a6 6 0 0 1 6.95 0">
+       </path>
+       <line x1="12" x2="12.01" y1="20" y2="20">
+       </line>
+      </svg>
+     </div>
+     <div class="net-info">
+      <div class="net-type" id="netType">
+       —
+      </div>
+      <div class="net-speed" id="netSpeed">
+       cek...
+      </div>
+     </div>
+    </div>
+    <div class="acct-chip" id="acctChip">
+     <span class="av" id="acctAv">
+      ?
+     </span>
+     <span class="lbl" id="acctLbl">
+      belum ada akun
+     </span>
+    </div>
+   </div>
+   <nav class="tabbar glass" id="tabbar">
+    <div class="tab-indicator" id="tabInd">
+    </div>
+    <button class="tab-btn active" data-tab="projects">
+     <svg viewbox="0 0 24 24">
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z">
+      </path>
+     </svg>
+     project
+    </button>
+    <button class="tab-btn" data-tab="deploy">
+     <svg viewbox="0 0 24 24">
+      <path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z">
+      </path>
+      <path d="M12 17v-6M9.5 13.5 12 11l2.5 2.5">
+      </path>
+     </svg>
+     deploy
+    </button>
+    <button class="tab-btn" data-tab="github">
+     <svg viewbox="0 0 24 24">
+      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+      </path>
+     </svg>
+     github
+    </button>
+    <button class="tab-btn" data-tab="activity">
+     <svg viewbox="0 0 24 24">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z">
+      </path>
+      <path d="M14 3v5h5M9 13h6M9 17h6">
+      </path>
+     </svg>
+     riwayat
+    </button>
+    <button class="tab-btn" data-tab="tools">
+     <svg viewbox="0 0 24 24">
+      <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z">
+      </path>
+     </svg>
+     alat
+    </button>
+   </nav>
+   <section class="pane active" id="pane-projects">
+    <div class="limit-card glass" id="limitCard">
+     <div class="limit-head">
+      <div class="ttl">
+       <svg viewbox="0 0 24 24">
+        <path d="M12 2v20M2 12h20">
+        </path>
+        <circle cx="12" cy="12" r="10">
+        </circle>
+       </svg>
+       limit akun vercel
+      </div>
+      <div class="rt">
+       <div class="plan" id="planBadge">
+        hobby
+       </div>
+       <svg class="chev" viewbox="0 0 24 24">
+        <path d="M6 9l6 6 6-6">
+        </path>
+       </svg>
+      </div>
+     </div>
+     <div class="pan">
+      <div>
+       <div class="limit-grid">
+        <div class="limit-item">
+         <div class="lb">
+          <span>
+           project
+          </span>
+          <span id="lProjNum">
+           —
+          </span>
+         </div>
+         <div class="limit-bar">
+          <div class="limit-bar-fill" id="lProjBar" style="width:0%">
+          </div>
+         </div>
+        </div>
+        <div class="limit-item" onclick="window.open('https://vercel.com/dashboard/usage','_blank','noopener')" style="cursor:pointer">
+         <div class="lb">
+          <span>
+           bandwidth
+          </span>
+          <span style="color:var(--red-soft)">
+           buka dashboard ↗
+          </span>
+         </div>
+         <div class="muted" style="font-size:10.5px;line-height:1.4">
+          angka pemakaian cuma tersedia di dashboard Vercel
+         </div>
+        </div>
+        <div class="limit-item">
+         <div class="lb">
+          <span>
+           build menit
+          </span>
+          <span id="lBuildNum">
+           —
+          </span>
+         </div>
+         <div class="limit-bar">
+          <div class="limit-bar-fill" id="lBuildBar" style="width:0%">
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="card-head" style="margin-bottom:16px">
+     <h2 style="margin:0">
+      project vercel
+     </h2>
+     <div class="actbar" style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ghost" id="btnSelectMode" style="padding:9px 13px">
+       <svg viewbox="0 0 24 24">
+        <path d="M9 11l3 3L22 4">
+        </path>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11">
+        </path>
+       </svg>
+       <span id="selModeLbl" style="font-size:12px">
+        pilih
+       </span>
+      </button>
+      <button class="btn warn" id="btnPauseAll" style="padding:9px 13px">
+       <svg viewbox="0 0 24 24">
+        <rect height="16" width="4" x="6" y="4">
+        </rect>
+        <rect height="16" width="4" x="14" y="4">
+        </rect>
+       </svg>
+       <span style="font-size:12px">
+        pause semua
+       </span>
+      </button>
+      <button class="btn ok" id="btnResumeAll" style="padding:9px 13px">
+       <svg viewbox="0 0 24 24">
+        <path d="M6 4l14 8-14 8z">
+        </path>
+       </svg>
+       <span style="font-size:12px">
+        resume semua
+       </span>
+      </button>
+      <button class="btn danger" id="btnDeleteAll" style="padding:9px 13px">
+       <svg viewbox="0 0 24 24">
+        <path d="M3 6h18">
+        </path>
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6">
+        </path>
+        <path d="M10 11v6M14 11v6">
+        </path>
+       </svg>
+       <span style="font-size:12px">
+        hapus semua
+       </span>
+      </button>
+      <button class="btn ghost" id="btnRefreshProjects" style="padding:9px 13px">
+       <svg id="refreshIcon" viewbox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-3-6.7L21 8">
+        </path>
+        <path d="M21 3v5h-5">
+        </path>
+       </svg>
+      </button>
+     </div>
+    </div>
+    <div id="projectsBody">
+     <div class="empty-state glass">
+      <div class="ic">
+       <svg viewbox="0 0 24 24">
+        <circle cx="12" cy="8" r="4">
+        </circle>
+        <path d="M4 21c0-4 4-6 8-6s8 2 8 6">
+        </path>
+       </svg>
+      </div>
+      <div>
+       belum ada akun vercel
+      </div>
+      <div class="muted">
+       tambah akun dulu lewat tombol + di pojok kanan bawah.
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="pane" id="pane-deploy">
+    <h2>
+     deploy ke vercel
+    </h2>
+    <div class="card glass">
+     <div class="deploy-stage show" id="stageUpload">
+      <div class="field">
+       <label for="deployName">
+        nama project
+       </label>
+       <input id="deployName" placeholder="contoh: situs-keren-123" type="text"/>
+      </div>
+      <div class="dropzone" id="dropzone">
+       <div class="dz-ic">
+        <svg viewbox="0 0 24 24">
+         <path d="M12 16V4M7 9l5-5 5 5">
+         </path>
+         <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3">
+         </path>
+        </svg>
+       </div>
+       <div style="font-weight:700;font-size:14px">
+        tarik &amp; taruh file di sini
+       </div>
+       <div class="muted" style="margin-top:6px">
+        atau pilih file / folder project kamu
+       </div>
+       <div class="dz-actions">
+        <button class="btn ghost" id="pickFiles" type="button">
+         pilih file
+        </button>
+        <button class="btn ghost" id="pickFolder" type="button">
+         pilih folder
+        </button>
+       </div>
+       <input id="fileInputMulti" multiple="" style="display:none" type="file"/>
+       <input id="fileInputFolder" multiple="" style="display:none" type="file" webkitdirectory=""/>
+      </div>
+      <div class="filelist-wrap" id="fileListWrap" style="display:none">
+       <div class="filelist-head">
+        <div>
+         <div class="fl-title">
+          file terpilih
+         </div>
+         <div class="fl-count" id="fileListCount">
+          0 file
+         </div>
+        </div>
+        <div class="fl-actions">
+         <button class="btn ghost" id="btnAddMore" type="button">
+          tambah file
+         </button>
+         <button class="btn ghost" id="btnChangeSource" type="button">
+          ganti source
+         </button>
+         <button class="btn danger" id="btnClearFiles" type="button">
+          kosongkan
+         </button>
+        </div>
+       </div>
+       <div class="filelist" id="fileList">
+       </div>
+      </div>
+      <div class="field" style="margin-top:16px">
+       <label>
+        mode deploy
+       </label>
+       <div class="batch-bar" id="batchBar">
+        <button class="active" data-n="1" type="button">
+         1×
+        </button>
+        <button data-n="5" type="button">
+         5×
+        </button>
+        <button data-n="10" type="button">
+         10×
+        </button>
+        <button data-n="20" type="button">
+         20×
+        </button>
+        <button data-n="custom" type="button">
+         custom
+        </button>
+       </div>
+       <div class="batch-slots" id="batchSlots" style="display:none">
+       </div>
+       <div class="muted" id="batchHint" style="margin-top:8px;display:none">
+        tiap slot dapet nama random unik — klik nama buat ganti manual.
+       </div>
+      </div>
+      <button class="btn primary block" disabled="" id="btnDeploy" style="margin-top:18px">
+       <svg viewbox="0 0 24 24">
+        <path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z">
+        </path>
+        <path d="M12 17v-6M9.5 13.5 12 11l2.5 2.5">
+        </path>
+       </svg>
+       deploy sekarang
+      </button>
+     </div>
+     <div class="deploy-stage" id="stageProgress">
+      <div class="ring-wrap">
+       <div class="ring">
+        <svg viewbox="0 0 100 100">
+         <defs>
+          <lineargradient id="ringGrad" x1="0" x2="1" y1="0" y2="1">
+           <stop offset="0" stop-color="#4cc9ff">
+           </stop>
+           <stop offset="1" stop-color="#a78bfa">
+           </stop>
+          </lineargradient>
+         </defs>
+         <circle class="tr" cx="50" cy="50" r="46">
+         </circle>
+         <circle class="fl" cx="50" cy="50" id="ringFl" r="46">
+         </circle>
+        </svg>
+        <b id="ringNum">
+         0%
+        </b>
+       </div>
+      </div>
+      <div class="progress-track">
+       <div class="progress-fill" id="progFill">
+       </div>
+      </div>
+      <div class="progress-row">
+       <span id="progLabel">
+        menyiapkan...
+       </span>
+       <span id="progPct">
+        0%
+       </span>
+      </div>
+      <div class="batch-summary" id="batchSummary" style="display:none">
+       <span>
+        total:
+        <b id="sumTotal">
+         0
+        </b>
+       </span>
+       <span>
+        beres:
+        <b id="sumOk" style="color:var(--ok)">
+         0
+        </b>
+       </span>
+       <span>
+        gagal:
+        <b id="sumErr" style="color:var(--err)">
+         0
+        </b>
+       </span>
+       <span>
+        jalan:
+        <b id="sumRun" style="color:var(--warn)">
+         0
+        </b>
+       </span>
+      </div>
+      <div class="batch-slots" id="batchProgressList" style="display:none">
+      </div>
+      <div class="log-term" id="deployLog">
+      </div>
+     </div>
+     <div class="deploy-stage" id="stageSuccess">
+      <div class="success-box">
+       <div class="success-ring">
+        <svg viewbox="0 0 24 24">
+         <path d="M5 13l4 4L19 7">
+         </path>
+        </svg>
+       </div>
+       <div id="successTitle" style="font-weight:800;font-size:16px">
+        deploy berhasil
+       </div>
+       <div class="muted" id="successSub" style="margin:6px 0 14px">
+       </div>
+       <div class="batch-url-list" id="successList">
+       </div>
+       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+        <button class="btn primary" id="btnOpenSite">
+         buka semua
+        </button>
+        <button class="btn ghost" id="btnCopyUrl">
+         salin semua
+        </button>
+        <button class="btn ghost" id="btnDeployAgain">
+         deploy lagi
+        </button>
+       </div>
+      </div>
+     </div>
+     <div class="deploy-stage" id="stageError">
+      <div class="success-box">
+       <div class="success-ring" style="background:radial-gradient(circle,rgba(255,85,102,.24),transparent 70%)">
+        <svg style="stroke:var(--err)" viewbox="0 0 24 24">
+         <path d="M6 6l12 12M18 6 6 18">
+         </path>
+        </svg>
+       </div>
+       <div style="font-weight:800;font-size:15px;color:var(--err)">
+        deploy gagal
+       </div>
+       <div class="muted" id="errorMsg" style="margin:10px 0 20px">
+       </div>
+       <button class="btn ghost" id="btnTryAgain">
+        coba lagi
+       </button>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="pane" id="pane-github">
+    <h2>
+     deploy dari github
+    </h2>
+    <div class="card glass" id="githubAuthCard">
+     <div class="card-head" style="margin-bottom:14px">
+      <div>
+       <div style="font-size:14px;font-weight:800">
+        akun github
+       </div>
+       <div class="muted" style="margin-top:4px">
+        tempel personal access token
+       </div>
+      </div>
+      <span class="plan" id="ghBadge">
+       belum login
+      </span>
+     </div>
+     <div id="ghFormWrap">
+      <div class="field">
+       <label for="ghTokenInput">
+        github personal access token
+       </label>
+       <input id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" type="password"/>
+       <div class="muted" style="margin-top:8px">
+        buat di github.com/settings/tokens — scope minimum:
+        <b>
+         repo
+        </b>
+        atau
+        <b>
+         public_repo
+        </b>
+        .
+       </div>
+      </div>
+      <button class="btn primary block" id="btnGhLogin">
+       verifikasi &amp; simpan
+      </button>
+     </div>
+     <div id="ghUserWrap" style="display:none">
+      <div class="gh-userbox">
+       <img alt="" id="ghAvatar" src=""/>
+       <div style="flex:1;min-width:0">
+        <div id="ghName" style="font-size:13.5px;font-weight:800">
+        </div>
+        <div id="ghLogin2" style="font-size:11px;color:var(--muted);margin-top:2px">
+        </div>
+       </div>
+       <button class="btn danger" id="btnGhLogout" style="padding:7px 11px;font-size:11px">
+        logout
+       </button>
+      </div>
+     </div>
+    </div>
+    <div id="ghReposWrap" style="display:none">
+     <div class="card-head" style="margin-bottom:14px">
+      <h2 style="margin:0">
+       repository kamu
+      </h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+       <input id="ghRepoSearch" placeholder="cari repo..." style="padding:8px 12px;font-size:12px;min-width:160px" type="text"/>
+       <button class="btn ghost" id="btnGhRefreshRepos" style="padding:9px 13px">
+        <svg viewbox="0 0 24 24">
+         <path d="M21 12a9 9 0 1 1-3-6.7L21 8">
+         </path>
+         <path d="M21 3v5h-5">
+         </path>
+        </svg>
+       </button>
+      </div>
+     </div>
+     <div class="grid" id="ghReposBody">
+     </div>
+    </div>
+   </section>
+   <section class="pane" id="pane-activity">
+    <h2>
+     aktivitas deploy
+    </h2>
+    <div class="card glass">
+     <div class="field" style="margin-bottom:12px">
+      <label for="activityProj">
+       pilih project
+      </label>
+      <select id="activityProj">
+      </select>
+     </div>
+     <div id="activityBody">
+      <div class="empty-state">
+       <div class="ic">
+        <svg viewbox="0 0 24 24">
+         <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z">
+         </path>
+        </svg>
+       </div>
+       <div class="muted">
+        pilih project untuk lihat riwayat deploy.
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="pane" id="pane-tools">
+    <h2>
+     alat
+    </h2>
+    <div class="seg" id="seg">
+     <i class="seg-ind" id="segInd">
+     </i>
+     <button class="active" data-sub="sfl">
+      bypass sfl
+     </button>
+     <button data-sub="lobby">
+      lobby ff
+     </button>
+     <button data-sub="dl">
+      downloader
+     </button>
+    </div>
+    <div class="subpane active" id="sub-sfl">
+     <div class="card glass">
+      <div class="field">
+       <label for="sflLink">
+        link sfl
+       </label>
+       <input autocomplete="off" id="sflLink" inputmode="url" placeholder="https://sfl.gl/xxxxx" type="text"/>
+      </div>
+      <div style="display:flex;gap:8px">
+       <button class="btn primary" id="btnSfl" style="flex:1">
+        bypass sekarang
+       </button>
+       <button class="btn ghost" id="btnSflPaste">
+        tempel
+       </button>
+      </div>
+     </div>
+     <div id="sflRes">
+     </div>
+    </div>
+    <div class="subpane" id="sub-lobby">
+     <div class="card glass">
+      <div class="field">
+       <label for="ffName">
+        nickname
+       </label>
+       <div style="display:flex;gap:8px">
+        <input autocomplete="off" id="ffName" placeholder="nickname" type="text"/>
+        <button class="btn ghost" id="btnFfRand">
+         acak
+        </button>
+       </div>
+      </div>
+      <button class="btn primary block" id="btnFf">
+       generate
+      </button>
+     </div>
+     <div id="ffRes">
+     </div>
+    </div>
+    <div class="subpane" id="sub-dl">
+     <div class="card glass">
+      <div class="field">
+       <label for="dlLink">
+        link video
+       </label>
+       <input autocomplete="off" id="dlLink" inputmode="url" placeholder="tempel link TikTok / IG / YouTube / X / Facebook" type="text"/>
+      </div>
+      <div style="display:flex;gap:8px">
+       <button class="btn primary" id="btnMp4" style="flex:1">
+        unduh mp4
+       </button>
+       <button class="btn ghost" id="btnMp3" style="flex:1">
+        unduh mp3
+       </button>
+       <button class="btn ghost" id="btnDlPaste">
+        tempel
+       </button>
+      </div>
+      <div class="muted" style="margin-top:12px">
+       TikTok pakai tikwm. Platform lain lewat API pihak ketiga, jadi bisa gagal kalau API-nya sedang mati.
+      </div>
+     </div>
+     <div id="dlRes">
+     </div>
+    </div>
+   </section>
+  </div>
+  <div class="sel-toolbar" id="selToolbar">
+   <div class="info">
+    <div class="ttl">
+     <span id="selCount">
+      0
+     </span>
+     project dipilih
+    </div>
+    <div class="sub">
+     pilih aksi untuk yang dipilih
+    </div>
+   </div>
+   <button class="btn ghost" id="selClear">
+    batal
+   </button>
+   <button class="btn warn" id="selPause">
+    <svg viewbox="0 0 24 24">
+     <rect height="16" width="4" x="6" y="4">
+     </rect>
+     <rect height="16" width="4" x="14" y="4">
+     </rect>
+    </svg>
+    pause
+   </button>
+   <button class="btn danger" id="selDelete">
+    <svg viewbox="0 0 24 24">
+     <path d="M3 6h18">
+     </path>
+     <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6">
+     </path>
+    </svg>
+    hapus
+   </button>
+  </div>
+  <button class="fab" id="fabAdd" title="tambah akun vercel">
+   <svg viewbox="0 0 24 24">
+    <path d="M12 5v14M5 12h14">
+    </path>
+   </svg>
+  </button>
+  <div class="overlay" id="acctOverlay">
+   <div class="modal glass">
+    <div class="modal-head">
+     <h3>
+      akun vercel
+     </h3>
+     <div class="xbtn" id="closeAcctMenu">
+      <svg viewbox="0 0 24 24">
+       <path d="M6 6l12 12M18 6 6 18">
+       </path>
+      </svg>
+     </div>
+    </div>
+    <div class="acct-menu-list" id="acctMenuList">
+    </div>
+    <button class="btn primary block" id="btnOpenAdd" style="margin-top:8px">
+     <svg viewbox="0 0 24 24">
+      <path d="M12 5v14M5 12h14">
+      </path>
+     </svg>
+     tambah akun baru
+    </button>
+   </div>
+  </div>
+  <div class="overlay" id="addOverlay">
+   <div class="modal glass">
+    <div class="modal-head">
+     <h3>
+      tambah akun vercel
+     </h3>
+     <div class="xbtn" id="closeAddModal">
+      <svg viewbox="0 0 24 24">
+       <path d="M6 6l12 12M18 6 6 18">
+       </path>
+      </svg>
+     </div>
+    </div>
+    <div id="addFormWrap">
+     <div class="field">
+      <label for="acctLabelInput">
+       label (opsional)
+      </label>
+      <input id="acctLabelInput" placeholder="mis. akun utama" type="text"/>
+     </div>
+     <div class="field">
+      <label for="acctTokenInput">
+       vercel access token
+      </label>
+      <input id="acctTokenInput" placeholder="tempel token di sini" type="password"/>
+      <div class="muted" style="margin-top:8px">
+       buat di vercel.com/account/tokens
+      </div>
+     </div>
+     <button class="btn primary block" id="btnVerifyAdd">
+      verifikasi &amp; tambah
+     </button>
+    </div>
+    <div id="addVerifyWrap" style="display:none">
+     <div class="verify-visual">
+      <div class="verify-ring" id="verifyRing">
+       <div class="spinner">
+       </div>
+      </div>
+      <div class="verify-text" id="verifyText">
+       memverifikasi token...
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="modal-overlay" id="modalConfirm">
+   <div class="confirm-box">
+    <div class="warn-ic">
+     <svg viewbox="0 0 24 24">
+      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+      </path>
+      <line x1="12" x2="12" y1="9" y2="13">
+      </line>
+      <line x1="12" x2="12.01" y1="17" y2="17">
+      </line>
+     </svg>
+    </div>
+    <h3 id="cfTitle">
+     Konfirmasi
+    </h3>
+    <p id="cfText">
+     Tindakan ini permanen.
+    </p>
+    <div class="row">
+     <button class="btn ghost" id="cfCancel">
+      batal
+     </button>
+     <button class="btn danger" id="cfOk">
+      hapus
+     </button>
+    </div>
+   </div>
+  </div>
+  <div class="toastwrap" id="toastwrap">
+  </div>
+  <script>
+   (function(){
+"use strict";
+
+const $ = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const NAMA_HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const NAMA_BULAN = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+function toast(msg, type){
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type||'info');
+  t.textContent = msg;
+  $('#toastwrap').appendChild(t);
+  setTimeout(()=> t.remove(), 3200);
+}
+
+function parseDate(iso){
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  return {
+    hari: NAMA_HARI[d.getDay()],
+    tanggal: d.getDate() + ' ' + NAMA_BULAN[d.getMonth()] + ' ' + d.getFullYear(),
+    jam: String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0')
+  };
+}
+
+function confirmModal(opts){
+  return new Promise(resolve => {
+    $('#cfTitle').textContent = opts.title || 'Konfirmasi';
+    $('#cfText').textContent = opts.text || '';
+    $('#cfOk').textContent = opts.okText || 'hapus';
+    $('#modalConfirm').classList.add('open');
+    const close = (val) => {
+      $('#modalConfirm').classList.remove('open');
+      $('#cfOk').onclick = null;
+      $('#cfCancel').onclick = null;
+      $('#modalConfirm').onclick = null;
+      resolve(val);
+    };
+    $('#cfOk').onclick = () => close(true);
+    $('#cfCancel').onclick = () => close(false);
+    $('#modalConfirm').onclick = (e) => { if (e.target === $('#modalConfirm')) close(false); };
+  });
+}
+
+/* ===== AKUN ===== */
+const LS_KEY = 'deployer_vc_accounts_v1';
+const LS_ACTIVE = 'deployer_vc_active_v1';
+let accounts = [];
+let activeId = null;
+try { accounts = JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { accounts = []; }
+activeId = localStorage.getItem(LS_ACTIVE) || (accounts[0] && accounts[0].id) || null;
+
+function saveAccounts(){
+  localStorage.setItem(LS_KEY, JSON.stringify(accounts));
+  localStorage.setItem(LS_ACTIVE, activeId || '');
+}
+function activeAccount(){ return accounts.find(a=>a.id===activeId) || null; }
+function activeToken(){ const a = activeAccount(); return a ? a.token : null; }
+function initials(s){ s = (s||'?').trim(); return s ? s[0].toUpperCase() : '?'; }
+
+const VC = 'https://api.vercel.com';
+async function vf(path, opts){
+  opts = opts || {};
+  const token = activeToken();
+  if (!token) throw new Error('belum ada akun aktif');
+  const headers = Object.assign({ Authorization:`Bearer ${token}` }, opts.headers||{});
+  const res = await fetch(VC+path, Object.assign({}, opts, { headers }));
+  const text = await res.text();
+  let body; try { body = text ? JSON.parse(text) : {}; } catch { body = { raw:text }; }
+  if (!res.ok) throw new Error((body.error && body.error.message) || body.message || `HTTP ${res.status}`);
+  return body;
+}
+async function verifyToken(token){
+  const res = await fetch(`${VC}/v2/user`, { headers:{ Authorization:`Bearer ${token}` } });
+  if (!res.ok) throw new Error('token tidak valid');
+  return res.json();
+}
+async function getUserInfo(){ return vf('/v2/user'); }
+async function listProjects(){ const d = await vf('/v9/projects?limit=100'); return d.projects || []; }
+async function deleteProject(id){ return vf(`/v9/projects/${encodeURIComponent(id)}`, { method:'DELETE' }); }
+async function pauseProject(id){ return vf(`/v1/projects/${encodeURIComponent(id)}/pause`, { method:'POST' }); }
+async function unpauseProject(id){ return vf(`/v1/projects/${encodeURIComponent(id)}/unpause`, { method:'POST' }); }
+async function listDeps(pid, limit){ const d = await vf(`/v6/deployments?projectId=${encodeURIComponent(pid)}&limit=${limit||20}`); return d.deployments || []; }
+async function sha1Hex(ab){
+  const d = await crypto.subtle.digest('SHA-1', ab);
+  return [...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function uploadFiles(files, onP){
+  const man = []; const total = files.reduce((s,f)=>s+f.size,0); let done = 0;
+  for (let i=0;i<files.length;i++){
+    const f = files[i]; const buf = await f.arrayBuffer(); const sha = await sha1Hex(buf);
+    const rel = (f.webkitRelativePath || f.name).replace(/^[^/]+\//, '');
+    man.push({ file: rel || f.name, sha, size:f.size });
+    const up = await fetch(`${VC}/v2/files`, {
+      method:'POST',
+      headers:{ Authorization:`Bearer ${activeToken()}`, 'Content-Type':'application/octet-stream', 'x-vercel-digest':sha },
+      body:buf
+    });
+    if (!up.ok && up.status!==409){ const t = await up.text(); throw new Error(`upload gagal (${up.status}): ${t.slice(0,160)}`); }
+    done += f.size;
+    if (onP) onP({ index:i+1, total:files.length, current:rel||f.name, uploadedBytes:done, totalBytes:total });
+  }
+  return man;
+}
+async function createDep(name, man){
+  return vf('/v13/deployments', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ name, files:man, target:'production', projectSettings:{ framework:null } })
+  });
+}
+async function prodDomain(pn){
+  try{
+    const d = await vf(`/v9/projects/${encodeURIComponent(pn)}`);
+    const a = d.targets && d.targets.production && d.targets.production.alias;
+    if (a && a.length) return a[0];
+    if (d.alias && d.alias.length) return d.alias[0];
+    return `${pn}.vercel.app`;
+  } catch { return `${pn}.vercel.app`; }
+}
+function slugify(s){
+  return (s||'').toLowerCase().trim()
+    .replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')
+    .slice(0,60) || `deploy-${Date.now().toString(36)}`;
+}
+
+/* ===== TABS ===== */
+const tabbar = $('#tabbar'), tabInd = $('#tabInd');
+function placeIndicator(btn){
+  if (!btn) return;
+  tabInd.style.width = btn.offsetWidth + 'px';
+  tabInd.style.left = btn.offsetLeft + 'px';
+}
+$$('.tab-btn', tabbar).forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    $$('.tab-btn', tabbar).forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); placeIndicator(btn);
+    $$('.pane').forEach(p=>p.classList.remove('active'));
+    $('#pane-'+btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab==='projects') renderProjects();
+    if (btn.dataset.tab==='activity') renderActivitySelect();
+  });
+});
+window.addEventListener('resize', ()=> placeIndicator($('.tab-btn.active', tabbar)));
+setTimeout(()=> placeIndicator($('.tab-btn.active', tabbar)), 80);
+
+/* ===== ACCT CHIP ===== */
+function renderAcctChip(){
+  const a = activeAccount();
+  $('#acctAv').textContent = a ? initials(a.label||a.username) : '?';
+  $('#acctLbl').textContent = a ? (a.label || a.username || 'akun') : 'belum ada akun';
+}
+$('#acctChip').addEventListener('click', ()=>{ renderAcctMenu(); openOverlay('#acctOverlay'); });
+$('#fabAdd').addEventListener('click', openAddModal);
+$('#btnOpenAdd').addEventListener('click', ()=>{ closeOverlay('#acctOverlay'); setTimeout(openAddModal, 260); });
+
+function openOverlay(sel){ const ov = $(sel); if (!ov) return; ov.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeOverlay(sel){
+  const ov = $(sel); if (!ov) return; ov.classList.remove('open');
+  setTimeout(()=>{ if (!$$('.overlay.open').length) document.body.style.overflow = ''; }, 400);
+}
+function bindOverlayDismiss(overlaySel, closeBtnSel){
+  const ov = $(overlaySel); if (!ov) return;
+  const btn = ov.querySelector(closeBtnSel);
+  if (btn){
+    const fire = (e)=>{ e.preventDefault(); e.stopPropagation(); closeOverlay(overlaySel); };
+    btn.addEventListener('click', fire, { passive:false });
+    btn.addEventListener('touchend', fire, { passive:false });
+  }
+  ov.addEventListener('click', (e)=>{ if (e.target === ov) closeOverlay(overlaySel); });
+}
+bindOverlayDismiss('#acctOverlay', '#closeAcctMenu');
+bindOverlayDismiss('#addOverlay', '#closeAddModal');
+
+function renderAcctMenu(){
+  const wrap = $('#acctMenuList');
+  if (!accounts.length){
+    wrap.innerHTML = '<div class="muted" style="padding:10px 2px">belum ada akun tersimpan.</div>';
+    return;
+  }
+  wrap.innerHTML = accounts.map(a=>`
+    <div class="acct-row ${a.id===activeId?'cur':''}" data-id="${a.id}">
+      <span class="av">${esc(initials(a.label||a.username))}</span>
+      <span class="ai">
+        <div class="an">${esc(a.label||a.username||'akun')}</div>
+        <div class="at">${esc(a.username||'')}</div>
+      </span>
+      <span class="rm" data-rm="${a.id}"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span>
+    </div>`).join('');
+  $$('.acct-row', wrap).forEach(row=>{
+    row.addEventListener('click', (e)=>{
+      if (e.target.closest('[data-rm]')) return;
+      activeId = row.dataset.id; saveAccounts(); renderAcctChip(); renderAcctMenu();
+      toast('akun diganti', 'info'); renderProjects(); renderActivitySelect();
+    });
+  });
+  $$('[data-rm]', wrap).forEach(rm=>{
+    rm.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const id = rm.dataset.rm;
+      accounts = accounts.filter(a=>a.id!==id);
+      if (activeId===id) activeId = accounts[0] && accounts[0].id || null;
+      saveAccounts(); renderAcctChip(); renderAcctMenu(); renderProjects();
+      toast('akun dihapus', 'info');
+    });
+  });
+}
+
+function openAddModal(){
+  $('#acctLabelInput').value = ''; $('#acctTokenInput').value = '';
+  $('#addFormWrap').style.display = ''; $('#addVerifyWrap').style.display = 'none';
+  openOverlay('#addOverlay');
+  setTimeout(()=> $('#acctTokenInput').focus(), 320);
+}
+$('#btnVerifyAdd').addEventListener('click', doVerifyAdd);
+$('#acctTokenInput').addEventListener('keydown', e=>{ if (e.key==='Enter') doVerifyAdd(); });
+
+async function doVerifyAdd(){
+  const token = $('#acctTokenInput').value.trim();
+  const label = $('#acctLabelInput').value.trim();
+  if (!token){ toast('token belum diisi', 'err'); return; }
+  $('#addFormWrap').style.display = 'none'; $('#addVerifyWrap').style.display = '';
+  $('#verifyRing').className = 'verify-ring';
+  $('#verifyRing').innerHTML = '<div class="spinner"></div>';
+  $('#verifyText').textContent = 'memverifikasi token...';
+  try{
+    const d = await verifyToken(token);
+    const username = (d.user && (d.user.username || d.user.email)) || 'akun vercel';
+    $('#verifyRing').className = 'verify-ring ok';
+    $('#verifyRing').innerHTML = '<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+    $('#verifyText').textContent = 'terverifikasi — ' + username;
+    const id = 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    accounts.push({ id, label, token, username });
+    activeId = id; saveAccounts(); renderAcctChip();
+    setTimeout(()=>{
+      closeOverlay('#addOverlay');
+      toast('akun ditambahkan: ' + username, 'ok');
+      renderProjects();
+    }, 950);
+  } catch(e){
+    $('#verifyRing').className = 'verify-ring err';
+    $('#verifyRing').innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+    $('#verifyText').textContent = e.message || 'token ditolak';
+    setTimeout(()=>{ $('#addFormWrap').style.display=''; $('#addVerifyWrap').style.display='none'; }, 1500);
+  }
+}
+
+/* ===== LIMIT ===== */
+const LIMITS = {
+  hobby: { proj: 100, bw: 100, build: 6000 },
+  pro:   { proj: Infinity, bw: 1000, build: 24000 }
+};
+
+async function fetchBuildMinutes(projects){
+  try {
+    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    let totalMs = 0;
+    let fetched = 0;
+    const slice = (projects || []).slice(0, 20);
+    for (const p of slice){
+      try {
+        const d = await vf(`/v6/deployments?projectId=${encodeURIComponent(p.id)}&limit=20`);
+        const deps = d.deployments || [];
+        for (const dep of deps){
+          const t = dep.createdAt ? new Date(dep.createdAt).getTime() : 0;
+          if (t < cutoff) continue;
+          let ms = 0;
+          if (dep.billableDuration) ms = Number(dep.billableDuration) * 1000;
+          else if (dep.buildingAt && dep.ready) ms = new Date(dep.ready).getTime() - new Date(dep.buildingAt).getTime();
+          if (ms > 0) totalMs += ms;
+        }
+        fetched++;
+      } catch {}
+    }
+    if (fetched === 0) return null;
+    return Math.round(totalMs / 60000);
+  } catch {
+    return null;
+  }
+}
+
+async function renderLimit(projectCount, projects){
+  if (!activeToken()){
+    $('#planBadge').textContent = 'no akun';
+    $('#lProjNum').textContent = '—';
+    $('#lBuildNum').textContent = '—';
+    return;
+  }
+  let plan = 'hobby';
+  try {
+    const u = await getUserInfo();
+    const p = (u.user && u.user.plan) ? u.user.plan : 'hobby';
+    plan = String(p).toLowerCase();
+  } catch {}
+
+  const isHobby = plan === 'hobby' || plan === 'free';
+  const planLabel = isHobby ? 'hobby' : (plan === 'pro' ? 'pro' : plan);
+  $('#planBadge').textContent = planLabel;
+
+  const key = isHobby ? 'hobby' : (plan === 'pro' ? 'pro' : 'hobby');
+  const lim = LIMITS[key] || LIMITS.hobby;
+
+  const projNum = projectCount || 0;
+  const projPct = lim.proj === Infinity ? 0 : Math.min(100, (projNum/lim.proj)*100);
+  $('#lProjNum').textContent = projNum + ' / ' + (lim.proj === Infinity ? '∞' : lim.proj);
+  setBar('#lProjBar', projPct);
+
+  $('#lBuildNum').textContent = 'memuat...';
+  fetchBuildMinutes(projects || []).then(min => {
+    if (min === null){
+      $('#lBuildNum').textContent = '— / ' + (lim.build === Infinity ? '∞' : lim.build + ' min');
+      setBar('#lBuildBar', 0);
+    } else {
+      const pct = lim.build === Infinity ? 0 : Math.min(100, (min / lim.build) * 100);
+      $('#lBuildNum').textContent = min + ' / ' + lim.build + ' min';
+      setBar('#lBuildBar', pct);
+    }
+  });
+}
+
+function setBar(sel, pct){
+  const el = $(sel);
+  el.style.width = Math.max(2, pct) + '%';
+  el.classList.remove('warn','err');
+  if (pct >= 90) el.classList.add('err');
+  else if (pct >= 70) el.classList.add('warn');
+}
+
+/* ===== PROJECTS ===== */
+let projectsLoading = false;
+let selectMode = false;
+let selectedIds = new Set();
+let currentProjects = [];
+
+function updateSelToolbar(){
+  const tb = $('#selToolbar');
+  if (selectedIds.size > 0){
+    tb.classList.add('show');
+    $('#selCount').textContent = selectedIds.size;
+  } else {
+    tb.classList.remove('show');
+  }
+}
+function enterSelectMode(){
+  selectMode = true;
+  document.body.classList.add('select-mode');
+  $('#selModeLbl').textContent = 'selesai';
+  $('#btnSelectMode').classList.add('primary');
+}
+function exitSelectMode(){
+  selectMode = false;
+  document.body.classList.remove('select-mode');
+  selectedIds.clear();
+  $('#selModeLbl').textContent = 'pilih';
+  $('#btnSelectMode').classList.remove('primary');
+  updateSelToolbar();
+  renderProjects();
+}
+$('#btnSelectMode').addEventListener('click', ()=>{
+  if (selectMode) exitSelectMode();
+  else enterSelectMode();
+});
+$('#selClear').addEventListener('click', ()=>{
+  selectedIds.clear();
+  updateSelToolbar();
+  renderProjects();
+});
+
+$('#selDelete').addEventListener('click', async ()=>{
+  const ids = Array.from(selectedIds);
+  if (!ids.length) return;
+  const ok = await confirmModal({
+    title: 'Hapus ' + ids.length + ' project?',
+    text: 'Tindakan ini permanen. Semua project yang dipilih akan dihapus dari Vercel.',
+    okText: 'hapus ' + ids.length
+  });
+  if (!ok) return;
+  let success = 0, failed = 0;
+  for (const id of ids){
+    try { await deleteProject(id); success++; }
+    catch (e) { failed++; }
+  }
+  selectedIds.clear();
+  updateSelToolbar();
+  toast(success + ' dihapus' + (failed ? ' · ' + failed + ' gagal' : ''), failed ? 'info' : 'ok');
+  renderProjects();
+});
+
+$('#selPause').addEventListener('click', async ()=>{
+  const ids = Array.from(selectedIds);
+  if (!ids.length) return;
+  const ok = await confirmModal({
+    title: 'Pause ' + ids.length + ' project?',
+    text: 'Project akan berhenti melayani traffic produksi. Site menampilkan error 503. Bisa di-resume nanti lewat tombol resume di kartu.',
+    okText: 'pause ' + ids.length
+  });
+  if (!ok) return;
+  let success = 0, failed = 0;
+  for (const id of ids){
+    try { await pauseProject(id); success++; }
+    catch (e) { failed++; }
+  }
+  selectedIds.clear();
+  updateSelToolbar();
+  toast(success + ' di-pause' + (failed ? ' · ' + failed + ' gagal' : ''), failed ? 'info' : 'ok');
+  renderProjects();
+});
+
+$('#btnPauseAll').addEventListener('click', async ()=>{
+  if (!currentProjects.length){ toast('belum ada project', 'info'); return; }
+  const ok = await confirmModal({
+    title: 'Pause SEMUA project?',
+    text: 'Semua ' + currentProjects.length + ' project akan berhenti melayani traffic produksi. Site menampilkan error 503. Bisa di-resume nanti lewat tombol resume di tiap kartu.',
+    okText: 'pause semua'
+  });
+  if (!ok) return;
+  const btn = $('#btnPauseAll');
+  btn.disabled = true;
+  const oldHtml = btn.innerHTML;
+  btn.innerHTML = 'memproses...';
+
+  let success = 0, failed = 0;
+  for (const p of currentProjects){
+    try { await pauseProject(p.id); success++; }
+    catch (e) { failed++; }
+  }
+  btn.disabled = false;
+  btn.innerHTML = oldHtml;
+  toast(success + ' di-pause' + (failed ? ' · ' + failed + ' gagal' : ''), failed ? 'info' : 'ok');
+  renderProjects();
+});
+
+$('#btnResumeAll').addEventListener('click', async ()=>{
+  const paused = currentProjects.filter(p=>p.paused===true);
+  if (!currentProjects.length){ toast('belum ada project', 'info'); return; }
+  if (!paused.length){ toast('tidak ada project yang di-pause', 'info'); return; }
+  const ok = await confirmModal({
+    title: 'Resume ' + paused.length + ' project?',
+    text: paused.length + ' project yang sedang di-pause akan aktif lagi dan melayani traffic produksi.',
+    okText: 'resume semua'
+  });
+  if (!ok) return;
+  const btn = $('#btnResumeAll');
+  btn.disabled = true;
+  const oldHtml = btn.innerHTML;
+  let success = 0, failed = 0;
+  for (let i = 0; i < paused.length; i++){
+    btn.textContent = 'memproses ' + (i + 1) + '/' + paused.length;
+    try { await unpauseProject(paused[i].id); success++; }
+    catch (e) { failed++; }
+  }
+  btn.disabled = false;
+  btn.innerHTML = oldHtml;
+  toast(success + ' di-resume' + (failed ? ' · ' + failed + ' gagal' : ''), failed ? 'info' : 'ok');
+  renderProjects();
+});
+
+/* ===== SEGMENTED: bypass / lobby / downloader ===== */
+(function(){
+  const seg=$('#seg'), ind=$('#segInd'), btns=$$('button',seg);
+  btns.forEach((b,i)=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    ind.style.transform='translateX(calc('+i+' * (100% + 4px)))';
+    $$('.subpane').forEach(s=>s.classList.remove('active'));
+    $('#sub-'+b.dataset.sub).classList.add('active');
+  }));
+})();
+
+$('#btnDeleteAll').addEventListener('click', async ()=>{
+  if (!currentProjects.length){ toast('belum ada project', 'info'); return; }
+  const list = currentProjects.slice();
+  const n = list.length;
+  const ok1 = await confirmModal({
+    title: 'Hapus SEMUA deploy?',
+    text: 'Semua ' + n + ' project akan dihapus permanen dari Vercel beserta seluruh deployment dan domain vercel.app-nya. Tindakan ini tidak bisa dibatalkan.',
+    okText: 'lanjut'
+  });
+  if (!ok1) return;
+  const ok2 = await confirmModal({
+    title: 'Yakin hapus ' + n + ' project?',
+    text: 'Ini konfirmasi terakhir. Setelah ini semua project di akun aktif langsung dihapus.',
+    okText: 'hapus ' + n
+  });
+  if (!ok2) return;
+  const btn = $('#btnDeleteAll');
+  btn.disabled = true;
+  const oldHtml = btn.innerHTML;
+  let success = 0, failed = 0;
+  for (let i = 0; i < list.length; i++){
+    btn.textContent = 'menghapus ' + (i + 1) + '/' + n;
+    try { await deleteProject(list[i].id); success++; }
+    catch (e) { failed++; }
+  }
+  btn.disabled = false;
+  btn.innerHTML = oldHtml;
+  selectedIds.clear();
+  updateSelToolbar();
+  toast(success + ' dihapus' + (failed ? ' · ' + failed + ' gagal' : ''), failed ? 'info' : 'ok');
+  renderProjects();
+});
+
+async function renderProjects(){
+  if (projectsLoading) return;
+  const body = $('#projectsBody');
+  const refreshBtn = $('#btnRefreshProjects');
+  const refreshIcon = $('#refreshIcon');
+
+  if (!activeToken()){
+    body.innerHTML = `<div class="empty-state glass"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><div>belum ada akun vercel</div><div class="muted">tambah akun dulu lewat tombol + di pojok kanan bawah.</div></div>`;
+    renderLimit(0, []);
+    return;
+  }
+
+  projectsLoading = true;
+  if (refreshBtn) refreshBtn.disabled = true;
+  if (refreshIcon) refreshIcon.style.animation = 'spin .9s linear infinite';
+
+  body.innerHTML = `<div class="empty-state glass"><div class="spinner"></div><div class="muted" style="margin-top:10px">memuat project...</div></div>`;
+
+  try{
+    const projects = await listProjects();
+    currentProjects = projects;
+    renderLimit(projects.length, projects);
+
+    if (!projects.length){
+      body.innerHTML = `<div class="empty-state glass"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div>belum ada project</div><div class="muted">deploy pertamamu lewat tab deploy.</div></div>`;
+      return;
+    }
+
+    const domains = await Promise.all(projects.map(p=>prodDomain(p.name)));
+
+    body.innerHTML = `<div class="grid">${projects.map((p,i)=>{
+      const dt = parseDate(p.createdAt) || { hari:'—', tanggal:'—', jam:'—' };
+      const sel = selectedIds.has(p.id);
+      const isPaused = p.paused === true;
+      return `
+      <div class="proj glass ${sel?'selected':''} ${isPaused?'paused':''}" data-pid="${esc(p.id)}" data-pname="${esc(p.name)}" style="animation-delay:${Math.min(i,12)*45}ms">
+        <div class="sel-box" data-sel>
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="pname"><span class="sw"></span>${esc(p.name)}${isPaused?' <span style="font-size:9px;padding:2px 7px;border-radius:99px;background:rgba(255,194,102,.18);color:var(--warn);font-weight:800;letter-spacing:.06em;margin-left:4px">PAUSED</span>':''}</div>
+        <a class="pdomain" href="https://${esc(domains[i])}" target="_blank" rel="noopener">${esc(domains[i])}</a>
+        <div class="pdate">
+          <div><span class="k">hari</span><span class="v hari">${esc(dt.hari)}</span></div>
+          <div><span class="k">tanggal</span><span class="v">${esc(dt.tanggal)}</span></div>
+          <div><span class="k">jam</span><span class="v jam">${esc(dt.jam)}</span></div>
+        </div>
+        <div class="pactions">
+          <button class="btn ghost" data-act="open" data-url="https://${esc(domains[i])}">buka</button>
+          <button class="btn ghost" data-act="log" data-pid="${esc(p.id)}" data-pname="${esc(p.name)}">log</button>
+          ${isPaused 
+            ? `<button class="btn warn" data-act="resume" data-pid="${esc(p.id)}" data-pname="${esc(p.name)}">resume</button>`
+            : `<button class="btn warn" data-act="pause" data-pid="${esc(p.id)}" data-pname="${esc(p.name)}">pause</button>`}
+          <button class="btn danger" data-act="del" data-pid="${esc(p.id)}" data-pname="${esc(p.name)}">hapus</button>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+
+    $$('.proj', body).forEach(card=>{
+      card.addEventListener('click', (e)=>{
+        if (e.target.closest('button[data-act]') || e.target.closest('.pdomain')) return;
+        if (!selectMode) return;
+        const id = card.dataset.pid;
+        if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+        card.classList.toggle('selected', selectedIds.has(id));
+        updateSelToolbar();
+      });
+    });
+    $$('[data-sel]', body).forEach(chk=>{
+      chk.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        if (!selectMode) enterSelectMode();
+        const id = chk.closest('.proj').dataset.pid;
+        if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+        chk.closest('.proj').classList.toggle('selected', selectedIds.has(id));
+        updateSelToolbar();
+      });
+    });
+
+    $$('[data-act="open"]', body).forEach(b=> b.addEventListener('click', ()=> window.open(b.dataset.url,'_blank')));
+    $$('[data-act="log"]', body).forEach(b=> b.addEventListener('click', ()=>{
+      $('.tab-btn[data-tab="activity"]').click();
+      setTimeout(()=>{ $('#activityProj').value = b.dataset.pid; $('#activityProj').dispatchEvent(new Event('change')); }, 100);
+    }));
+
+    $$('[data-act="pause"]', body).forEach(b=> b.addEventListener('click', async ()=>{
+      const ok = await confirmModal({
+        title: 'Pause project?',
+        text: 'Project "' + b.dataset.pname + '" akan berhenti melayani traffic produksi. Site menampilkan error 503.',
+        okText: 'pause'
+      });
+      if (!ok) return;
+      try{ await pauseProject(b.dataset.pid); toast('project di-pause', 'ok'); renderProjects(); }
+      catch(e){ toast('gagal pause: ' + e.message, 'err'); }
+    }));
+
+    $$('[data-act="resume"]', body).forEach(b=> b.addEventListener('click', async ()=>{
+      const ok = await confirmModal({
+        title: 'Resume project?',
+        text: 'Project "' + b.dataset.pname + '" akan kembali melayani traffic produksi.',
+        okText: 'resume'
+      });
+      if (!ok) return;
+      try{ await unpauseProject(b.dataset.pid); toast('project di-resume', 'ok'); renderProjects(); }
+      catch(e){ toast('gagal resume: ' + e.message, 'err'); }
+    }));
+
+    $$('[data-act="del"]', body).forEach(b=> b.addEventListener('click', async ()=>{
+      const ok = await confirmModal({
+        title: 'Hapus project?',
+        text: 'Project "' + b.dataset.pname + '" akan dihapus permanen dari Vercel.',
+        okText: 'hapus'
+      });
+      if (!ok) return;
+      try{ await deleteProject(b.dataset.pid); toast('project dihapus', 'ok'); renderProjects(); }
+      catch(e){ toast(e.message, 'err'); }
+    }));
+
+    toast(projects.length + ' project dimuat', 'ok');
+  } catch(e){
+    body.innerHTML = `<div class="empty-state glass"><div class="ic" style="color:var(--err)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></div><div style="color:var(--err)">${esc(e.message)}</div></div>`;
+  } finally {
+    projectsLoading = false;
+    if (refreshBtn) refreshBtn.disabled = false;
+    if (refreshIcon) refreshIcon.style.animation = '';
+  }
+}
+
+setTimeout(()=>{
+  const rb = $('#btnRefreshProjects');
+  if (rb) rb.addEventListener('click', ()=>{ toast('refresh...', 'info'); renderProjects(); });
+}, 60);
+
+/* ===== DEPLOY ===== */
+let pickedFiles = [];
+const dropzone = $('#dropzone');
+['dragover','dragenter'].forEach(ev=> dropzone.addEventListener(ev, e=>{ e.preventDefault(); dropzone.classList.add('drag'); }));
+['dragleave','drop'].forEach(ev=> dropzone.addEventListener(ev, e=>{ e.preventDefault(); dropzone.classList.remove('drag'); }));
+dropzone.addEventListener('drop', e=>{ const files = Array.from(e.dataTransfer.files||[]); if (files.length) setFiles(files, pickedFiles.length ? 'append' : 'replace'); });
+dropzone.addEventListener('click', e=>{ if (e.target.closest('button')) return; $('#fileInputMulti').click(); });
+$('#pickFiles').addEventListener('click', e=>{ e.stopPropagation(); $('#fileInputMulti').click(); });
+$('#pickFolder').addEventListener('click', e=>{ e.stopPropagation(); $('#fileInputFolder').click(); });
+
+function setFiles(files, mode){
+  mode = mode || 'replace';
+  if (mode === 'append' && pickedFiles.length){
+    const merged = pickedFiles.slice();
+    for (const f of files){
+      const dup = merged.some(x=> (x.webkitRelativePath||x.name) === (f.webkitRelativePath||f.name) && x.size === f.size);
+      if (!dup) merged.push(f);
+    }
+    pickedFiles = merged;
+  } else {
+    pickedFiles = files;
+  }
+
+  const wrap = $('#fileListWrap');
+  const fl = $('#fileList');
+  const btnDeploy = $('#btnDeploy');
+
+  if (!pickedFiles.length){
+    wrap.style.display = 'none';
+    btnDeploy.disabled = true;
+    return;
+  }
+
+  wrap.style.display = '';
+  $('#fileListCount').textContent = pickedFiles.length + ' file · ' +
+    (pickedFiles.reduce((s,f)=>s+f.size,0)/1024).toFixed(1) + ' KB';
+
+  fl.innerHTML = pickedFiles.slice(0,50).map((f,i)=>`
+    <div class="fi">
+      <span class="fi-name">${esc(f.webkitRelativePath||f.name)}</span>
+      <span class="fi-size">${(f.size/1024).toFixed(1)} kb</span>
+      <button class="fi-remove" type="button" data-remove="${i}" title="hapus">×</button>
+    </div>
+  `).join('') + (pickedFiles.length>50 ? `<div style="text-align:center;color:var(--muted);padding:6px">+ ${pickedFiles.length-50} file lainnya</div>` : '');
+
+  $$('[data-remove]', fl).forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = parseInt(b.dataset.remove, 10);
+      pickedFiles.splice(idx, 1);
+      setFiles(pickedFiles, 'replace');
+    });
+  });
+
+  btnDeploy.disabled = false;
+}
+
+$('#btnAddMore').addEventListener('click', ()=>{ $('#fileInputMulti').click(); });
+$('#btnChangeSource').addEventListener('click', ()=>{
+  pickedFiles = [];
+  $('#fileInputMulti').value = '';
+  $('#fileInputFolder').value = '';
+  setFiles([], 'replace');
+  setTimeout(()=> $('#fileInputMulti').click(), 120);
+});
+$('#btnClearFiles').addEventListener('click', ()=>{
+  pickedFiles = [];
+  $('#fileInputMulti').value = '';
+  $('#fileInputFolder').value = '';
+  setFiles([], 'replace');
+  toast('file dikosongkan', 'info');
+});
+
+$('#fileInputMulti').addEventListener('change', e=> {
+  const files = Array.from(e.target.files||[]);
+  const mode = pickedFiles.length ? 'append' : 'replace';
+  setFiles(files, mode);
+  e.target.value = '';
+});
+$('#fileInputFolder').addEventListener('change', e=> {
+  const files = Array.from(e.target.files||[]);
+  setFiles(files, 'replace');
+  e.target.value = '';
+});
+
+function setStage(name){
+  $$('.deploy-stage').forEach(s=>s.classList.remove('show'));
+  $('#stage'+name).classList.add('show');
+}
+function logLine(txt){
+  const term = $('#deployLog');
+  const d = document.createElement('div');
+  d.className = 'ln'; d.textContent = '› ' + txt;
+  term.appendChild(d); term.scrollTop = term.scrollHeight;
+}
+
+const RAND_WORDS = ['nyx','void','echo','flux','glitch','phantom','cipher','orbit','pulse','nexus','drift','shard','ember','vortex','lumen','quartz','onyx','raven','halo','apex','zenith','nova','prism','delta','sigma','kappa','gamma','omega','neon','cobalt','crimson','sable','ivory','jade','amber','coral','azure','violet','indigo','slate','frost','storm','blaze','tide','dusk','dawn','mirage','rune','glyph','sigil','wraith','specter','shade','relic','totem','vector','matrix','pixel','byte','node'];
+const RAND_SUFFIX = ['x','z','o','a','n','io','ex','ar','on','us'];
+const MAX_BATCH = 100;
+
+function randName(){
+  const w = RAND_WORDS[Math.floor(Math.random()*RAND_WORDS.length)];
+  const s = RAND_SUFFIX[Math.floor(Math.random()*RAND_SUFFIX.length)];
+  const h = Math.random().toString(36).slice(2,6);
+  return `${w}${s}-${h}`;
+}
+
+let batchCount = 1;
+let batchNames = [];
+
+function syncBatchUI(){
+  const slots = $('#batchSlots'); const hint = $('#batchHint');
+  if (batchCount <= 1){ slots.style.display = 'none'; hint.style.display = 'none'; slots.innerHTML = ''; return; }
+  slots.style.display = ''; hint.style.display = '';
+  while (batchNames.length < batchCount) batchNames.push(randName());
+  batchNames = batchNames.slice(0, batchCount);
+  slots.innerHTML = batchNames.map((n,i)=>`
+    <div class="slot" data-i="${i}">
+      <span class="sidx">${i+1}</span>
+      <span class="sname" data-name="${i}" title="klik buat ganti">${esc(n)}</span>
+      <span class="sstate idle">idle</span>
+    </div>`).join('');
+  slots.querySelectorAll('.sname').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const i = parseInt(el.dataset.name, 10);
+      const v = prompt('nama project:', batchNames[i]);
+      if (v && v.trim()){ batchNames[i] = slugify(v.trim()); el.textContent = batchNames[i]; }
+    });
+  });
+}
+
+$('#batchBar').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-n]'); if (!btn) return;
+  $('#batchBar').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const n = btn.dataset.n;
+  if (n === 'custom'){
+    const v = parseInt(prompt(`berapa deployment? (1-${MAX_BATCH})`, '10') || '1', 10);
+    batchCount = Math.max(1, Math.min(MAX_BATCH, isNaN(v)?1:v));
+    batchNames = [];
+  } else {
+    batchCount = parseInt(n, 10) || 1; batchNames = [];
+  }
+  syncBatchUI();
+});
+syncBatchUI();
+
+function setSlotState(i, state, label){
+  const el = document.querySelector(`#batchProgressList .slot[data-i="${i}"]`) ||
+             document.querySelector(`#batchSlots .slot[data-i="${i}"]`);
+  if (!el) return;
+  const s = el.querySelector('.sstate');
+  if (s){ s.className = 'sstate ' + state; s.textContent = label || state; }
+  el.classList.remove('done','err');
+  if (state === 'ok') el.classList.add('done');
+  if (state === 'err') el.classList.add('err');
+}
+
+function buildProgressSlots(){
+  const wrap = $('#batchProgressList'); const summary = $('#batchSummary');
+  if (batchCount <= 1){ wrap.style.display = 'none'; wrap.innerHTML = ''; summary.style.display = 'none'; return; }
+  wrap.style.display = ''; summary.style.display = 'flex';
+  wrap.innerHTML = batchNames.map((n,i)=>`
+    <div class="slot" data-i="${i}">
+      <span class="sidx">${i+1}</span>
+      <span class="sname" title="${esc(n)}">${esc(n)}</span>
+      <span class="sstate idle">idle</span>
+    </div>`).join('');
+}
+
+function updateSummary(){
+  const ok = $$('#batchProgressList .sstate.ok').length;
+  const err = $$('#batchProgressList .sstate.err').length;
+  const run = $$('#batchProgressList .sstate.run').length;
+  $('#sumTotal').textContent = batchCount;
+  $('#sumOk').textContent = ok;
+  $('#sumErr').textContent = err;
+  $('#sumRun').textContent = run;
+  const pct = Math.round(((ok+err)/batchCount)*100);
+  $('#progFill').style.width = pct + '%';
+  $('#progPct').textContent = pct + '%';
+}
+
+async function runOneSlot(name, i, manifest){
+  setSlotState(i, 'run', 'build');
+  logLine(`[slot ${i+1}] ${name} → create deployment`);
+  try{
+    const dep = await createDep(name, manifest);
+    logLine(`[slot ${i+1}] dep id ${dep.id}`);
+    let ready = null;
+    const start = Date.now();
+    while (Date.now() - start < 180000){
+      const d = await vf(`/v13/deployments/${encodeURIComponent(dep.id)}`);
+      if (d.readyState === 'READY'){ ready = d; break; }
+      if (d.readyState === 'ERROR' || d.readyState === 'CANCELED') throw new Error('deployment ' + d.readyState.toLowerCase());
+      await new Promise(r=> setTimeout(r, 2500));
+    }
+    if (!ready) throw new Error('timeout nunggu build');
+    const domain = await prodDomain(name);
+    const url = 'https://' + domain;
+    setSlotState(i, 'ok', 'live');
+    logLine(`[slot ${i+1}] ✅ ${url}`);
+    updateSummary();
+    return { ok:true, name, url, id:dep.id };
+  } catch(e){
+    setSlotState(i, 'err', 'gagal');
+    logLine(`[slot ${i+1}] ❌ ${e.message}`);
+    updateSummary();
+    return { ok:false, name, error:e.message };
+  }
+}
+
+async function runBatchDeploy(){
+  if (!activeToken()){ toast('tambah akun vercel dulu', 'err'); return; }
+  if (!pickedFiles.length){ toast('pilih file dulu', 'err'); return; }
+
+  if (batchCount > 1){
+    while (batchNames.length < batchCount) batchNames.push(randName());
+    batchNames = batchNames.slice(0, batchCount);
+  } else {
+    const typed = $('#deployName').value.trim();
+    batchNames = [ typed ? slugify(typed) : randName() ];
+  }
+
+  setStage('Progress');
+  $('#deployLog').innerHTML = '';
+  $('#progFill').style.width = '0%';
+  $('#progPct').textContent = '0%';
+  $('#progLabel').textContent = `menyiapkan ${batchCount} deployment...`;
+  buildProgressSlots();
+  updateSummary();
+
+  logLine(`mode batch: ${batchCount} deployment paralel`);
+  logLine(`file siap: ${pickedFiles.length}`);
+
+  $('#progLabel').textContent = 'mengupload file (sekali untuk semua slot)...';
+  let manifest;
+  try{
+    manifest = await uploadFiles(pickedFiles, (p)=>{
+      const pct = Math.round((p.uploadedBytes/p.totalBytes)*100);
+      $('#progPct').textContent = pct + '%';
+      $('#progLabel').textContent = `mengupload file (${p.index}/${p.total})`;
+    });
+    logLine(`semua file terupload (${manifest.length} file).`);
+  } catch(e){
+    $('#errorMsg').textContent = 'upload gagal: ' + e.message;
+    setStage('Error'); toast('upload gagal', 'err'); return;
+  }
+
+  $('#progLabel').textContent = `mendeploy ${batchCount} slot...`;
+  $('#progPct').textContent = '';
+  const results = await Promise.all(batchNames.map((name, i)=> runOneSlot(name, i, manifest)));
+
+  const okCount = results.filter(r=>r.ok).length;
+  const errCount = results.length - okCount;
+
+  const list = $('#successList');
+  list.innerHTML = results.map(r=>{
+    if (r.ok) return `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)} → ${esc(r.url)}</a>`;
+    return `<a class="err" title="${esc(r.error||'')}">${esc(r.name)} → GAGAL: ${esc((r.error||'').slice(0,80))}</a>`;
+  }).join('');
+
+  $('#successTitle').textContent = errCount === 0 ? `${okCount} deploy berhasil` : `${okCount} berhasil, ${errCount} gagal`;
+  $('#successSub').textContent = `${batchCount} slot · ${new Date().toLocaleString('id-ID')}`;
+
+  $('#btnOpenSite').onclick = ()=>{ results.filter(r=>r.ok).forEach(r=> window.open(r.url, '_blank')); };
+  $('#btnCopyUrl').onclick = ()=>{
+    const txt = results.filter(r=>r.ok).map(r=>r.url).join('\n');
+    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(()=> toast(okCount + ' link disalin', 'ok'));
+  };
+
+  setStage('Success');
+  if (errCount === 0) toast(`${okCount} deploy sukses`, 'ok');
+  else toast(`${okCount} ok / ${errCount} gagal`, 'info');
+
+  pickedFiles = [];
+  setFiles([], 'replace');
+}
+
+$('#btnDeploy').addEventListener('click', runBatchDeploy);
+$('#btnDeployAgain').addEventListener('click', ()=>{ setFiles([]); $('#deployName').value = ''; batchNames = []; syncBatchUI(); setStage('Upload'); });
+$('#btnTryAgain').addEventListener('click', ()=> setStage('Upload'));
+
+/* ===== GITHUB ===== */
+const GH_KEY = 'deployer_gh_token_v1';
+let ghToken = localStorage.getItem(GH_KEY) || '';
+let ghUser = null;
+let ghRepos = [];
+let ghFiltered = [];
+
+async function ghFetch(path, opts){
+  opts = opts || {};
+  if (!ghToken) throw new Error('belum login github');
+  const headers = Object.assign({
+    Authorization: `Bearer ${ghToken}`,
+    Accept: 'application/vnd.github+json'
+  }, opts.headers || {});
+  const res = await fetch('https://api.github.com' + path, Object.assign({}, opts, { headers }));
+  const text = await res.text();
+  let body; try { body = text ? JSON.parse(text) : {}; } catch { body = {}; }
+  if (!res.ok) throw new Error(body.message || `HTTP ${res.status}`);
+  return body;
+}
+async function ghGetUser(){ return ghFetch('/user'); }
+async function ghListRepos(){ return ghFetch('/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator'); }
+
+function renderGhUser(){
+  if (ghUser){
+    $('#ghFormWrap').style.display = 'none';
+    $('#ghUserWrap').style.display = '';
+    $('#ghBadge').textContent = 'logged in';
+    $('#ghAvatar').src = ghUser.avatar_url || '';
+    $('#ghName').textContent = ghUser.name || ghUser.login || 'user';
+    $('#ghLogin2').textContent = '@' + (ghUser.login || '') + ' · ' + (ghUser.public_repos || 0) + ' public repo';
+    $('#ghReposWrap').style.display = '';
+  } else {
+    $('#ghFormWrap').style.display = '';
+    $('#ghUserWrap').style.display = 'none';
+    $('#ghBadge').textContent = 'belum login';
+    $('#ghReposWrap').style.display = 'none';
+  }
+}
+
+$('#btnGhLogin').addEventListener('click', async ()=>{
+  const t = $('#ghTokenInput').value.trim();
+  if (!t){ toast('token belum diisi', 'err'); return; }
+  const btn = $('#btnGhLogin');
+  btn.disabled = true; btn.textContent = 'memverifikasi...';
+  try{
+    const old = ghToken;
+    ghToken = t;
+    const u = await ghGetUser();
+    ghUser = u;
+    localStorage.setItem(GH_KEY, ghToken);
+    toast('login sebagai ' + (u.login || 'user'), 'ok');
+    renderGhUser();
+    await loadGhRepos();
+  } catch(e){
+    ghToken = old;
+    toast('token tidak valid: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = 'verifikasi & simpan';
+  }
+});
+
+$('#btnGhLogout').addEventListener('click', ()=>{
+  ghToken = ''; ghUser = null; ghRepos = []; ghFiltered = [];
+  localStorage.removeItem(GH_KEY);
+  renderGhUser();
+  toast('logout github', 'info');
+});
+
+$('#btnGhRefreshRepos').addEventListener('click', ()=> loadGhRepos());
+
+$('#ghRepoSearch').addEventListener('input', (e)=>{
+  const q = e.target.value.toLowerCase().trim();
+  ghFiltered = q ? ghRepos.filter(r=>
+    (r.name||'').toLowerCase().includes(q) ||
+    (r.description||'').toLowerCase().includes(q) ||
+    (r.full_name||'').toLowerCase().includes(q)
+  ) : ghRepos.slice();
+  renderGhRepos();
+});
+
+async function loadGhRepos(){
+  const body = $('#ghReposBody');
+  body.innerHTML = '<div class="gh-loading"><div class="spinner"></div></div>';
+  try{
+    const repos = await ghListRepos();
+    ghRepos = Array.isArray(repos) ? repos : [];
+    ghFiltered = ghRepos.slice();
+    renderGhRepos();
+    toast(ghRepos.length + ' repo dimuat', 'ok');
+  } catch(e){
+    body.innerHTML = `<div class="empty-state glass"><div class="ic" style="color:var(--err)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></div><div style="color:var(--err)">${esc(e.message)}</div></div>`;
+  }
+}
+
+function renderGhRepos(){
+  const body = $('#ghReposBody');
+  if (!ghFiltered.length){
+    body.innerHTML = `<div class="empty-state glass"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></div><div>belum ada repo</div></div>`;
+    return;
+  }
+  body.innerHTML = ghFiltered.map((r,i)=>{
+    const dt = parseDate(r.updated_at) || { hari:'—', tanggal:'—', jam:'—' };
+    return `
+      <div class="gh-repo glass" style="animation-delay:${Math.min(i,12)*35}ms">
+        <div class="rn">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          ${esc(r.name)}
+          ${r.private ? '<span style="font-size:9px;padding:2px 7px;border-radius:99px;background:rgba(255,194,102,.15);color:var(--warn);font-weight:800;letter-spacing:.06em">PRIVATE</span>' : ''}
+        </div>
+        <div class="rd">${esc(r.description || 'tanpa deskripsi')}</div>
+        <div class="rmeta">
+          <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>${esc(r.language || '—')}</span>
+          <span><svg viewBox="0 0 24 24"><polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5"/></svg>${r.stargazers_count || 0}</span>
+          <span>update ${esc(dt.hari)}, ${esc(dt.tanggal)} · ${esc(dt.jam)}</span>
+        </div>
+        <div class="pactions">
+          <button class="btn ghost" data-gh-open="${esc(r.html_url)}">buka di github</button>
+          <button class="btn primary" data-gh-deploy="${esc(r.full_name)}" data-gh-branch="${esc(r.default_branch||'main')}">deploy ke vercel</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  $$('[data-gh-open]').forEach(b => {
+    b.addEventListener('click', ()=> window.open(b.dataset.ghOpen, '_blank'));
+  });
+  $$('[data-gh-deploy]').forEach(b => {
+    b.addEventListener('click', ()=> deployFromGitHub(b.dataset.ghDeploy, b.dataset.ghBranch));
+  });
+}
+
+async function deployFromGitHub(fullName, branch){
+  if (!activeToken()){
+    toast('tambah akun vercel dulu di topbar', 'err');
+    return;
+  }
+  const ok = await confirmModal({
+    title: 'Deploy dari GitHub?',
+    text: `Repo "${fullName}" branch "${branch}" akan di-deploy ke Vercel sebagai production. Butuh: akun Vercel kamu sudah tersambung dengan GitHub, dan repo bisa diakses.`,
+    okText: 'deploy'
+  });
+  if (!ok) return;
+
+  $('.tab-btn[data-tab="deploy"]').click();
+  setStage('Progress');
+  $('#deployLog').innerHTML = '';
+  $('#progFill').style.width = '0%';
+  $('#progPct').textContent = '0%';
+  $('#progLabel').textContent = 'mendeploy dari github...';
+  $('#batchProgressList').style.display = 'none';
+  $('#batchSummary').style.display = 'none';
+
+  logLine(`git source: ${fullName} @ ${branch}`);
+
+  try{
+    const projectName = fullName.split('/').pop().toLowerCase().replace(/[^a-z0-9-]/g,'-').slice(0,60);
+    const body = {
+      name: projectName,
+      target: 'production',
+      gitSource: { type: 'github', repo: fullName, ref: branch },
+      projectSettings: { framework: null }
+    };
+    const dep = await vf('/v13/deployments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    logLine(`dep id ${dep.id}`);
+    $('#progLabel').textContent = 'menunggu build...';
+
+    let ready = null;
+    const start = Date.now();
+    while (Date.now() - start < 300000){
+      const d = await vf(`/v13/deployments/${encodeURIComponent(dep.id)}`);
+      if (d.readyState === 'READY'){ ready = d; break; }
+      if (d.readyState === 'ERROR' || d.readyState === 'CANCELED') throw new Error('build ' + d.readyState.toLowerCase());
+      await new Promise(r=> setTimeout(r, 3000));
+    }
+    if (!ready) throw new Error('timeout nunggu build');
+
+    const url = 'https://' + (ready.url || (projectName + '.vercel.app'));
+    logLine(`✅ ${url}`);
+    $('#progFill').style.width = '100%';
+    $('#progPct').textContent = '100%';
+
+    $('#successTitle').textContent = 'deploy dari github berhasil';
+    $('#successSub').textContent = `${fullName} @ ${branch}`;
+    $('#successList').innerHTML = `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(projectName)} → ${esc(url)}</a>`;
+    $('#btnOpenSite').onclick = ()=> window.open(url, '_blank');
+    $('#btnCopyUrl').onclick = ()=> navigator.clipboard.writeText(url).then(()=> toast('link disalin', 'ok'));
+    $('#btnDeployAgain').onclick = ()=>{ setStage('Upload'); $('.tab-btn[data-tab="github"]').click(); };
+
+    setStage('Success');
+    toast('deploy dari github sukses', 'ok');
+  } catch(e){
+    logLine(`❌ ${e.message}`);
+    $('#errorMsg').textContent = e.message;
+    setStage('Error');
+    toast('deploy gagal: ' + e.message, 'err');
+  }
+}
+
+/* ===== ACTIVITY ===== */
+async function renderActivitySelect(){
+  const sel = $('#activityProj');
+  if (!activeToken()){ sel.innerHTML = '<option>belum ada akun</option>'; return; }
+  sel.innerHTML = '<option>memuat...</option>';
+  try{
+    const projects = await listProjects();
+    if (!projects.length){ sel.innerHTML = '<option>belum ada project</option>'; return; }
+    sel.innerHTML = projects.map(p=>`<option value="${esc(p.id)}" data-name="${esc(p.name)}">${esc(p.name)}</option>`).join('');
+    sel.onchange = ()=> renderActivity(sel.value, sel.selectedOptions[0] && sel.selectedOptions[0].dataset.name);
+    renderActivity(sel.value, sel.selectedOptions[0] && sel.selectedOptions[0].dataset.name);
+  } catch(e){ sel.innerHTML = `<option>${esc(e.message)}</option>`; }
+}
+async function renderActivity(pid, pname){
+  const body = $('#activityBody');
+  if (!pid) return;
+  body.innerHTML = `<div class="empty-state"><div class="spinner"></div><div class="muted" style="margin-top:10px">memuat riwayat...</div></div>`;
+  try{
+    const deps = await listDeps(pid, 20);
+    if (!deps.length){ body.innerHTML = '<div class="empty-state"><div class="muted">belum ada deployment.</div></div>'; return; }
+    body.innerHTML = deps.map(d=>{
+      const state = (d.readyState||d.state||'').toUpperCase();
+      const cls = state==='READY' ? 'ready' : (state==='ERROR'||state==='CANCELED') ? 'error' : 'building';
+      const dt = parseDate(d.createdAt) || { hari:'—', tanggal:'—', jam:'—' };
+      return `<div class="dep-row">
+        <span class="badge ${cls}"><span class="d"></span>${esc(state||'—')}</span>
+        <div class="dmeta">
+          <div class="durl">${esc(d.url||pname)}</div>
+          <div class="dtime">${esc(dt.hari)}, ${esc(dt.tanggal)} · ${esc(dt.jam)}</div>
+        </div>
+        <button class="btn ghost" style="padding:7px 11px;font-size:11.5px" data-url="https://${esc(d.url)}">buka</button>
+      </div>`;
+    }).join('');
+    $$('[data-url]', body).forEach(b=> b.addEventListener('click', ()=> window.open(b.dataset.url, '_blank')));
+  } catch(e){
+    body.innerHTML = `<div class="empty-state"><div style="color:var(--err)">${esc(e.message)}</div></div>`;
+  }
+}
+
+/* ===== NETWORK MONITOR ===== */
+const netChip = $('#netChip');
+const netIcon = $('#netIcon');
+const netType = $('#netType');
+const netSpeed = $('#netSpeed');
+
+const NET_ICONS = {
+  wifi: '<svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>',
+  cellular: '<svg viewBox="0 0 24 24"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 4v16"/></svg>',
+  ethernet: '<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>',
+  offline: '<svg viewBox="0 0 24 24"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>',
+  unknown: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+};
+
+function netUpdate(){
+  const online = navigator.onLine;
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+  netChip.classList.remove('offline','slow');
+
+  if (!online){
+    netIcon.innerHTML = NET_ICONS.offline;
+    netType.textContent = 'offline';
+    netSpeed.textContent = 'tidak ada koneksi';
+    netChip.classList.add('offline');
+    return;
+  }
+
+  let type = 'unknown';
+  let speed = '';
+
+  if (conn){
+    const t = conn.type || '';
+    const eff = conn.effectiveType || '';
+    const down = conn.downlink;
+    const rtt = conn.rtt;
+
+    if (t === 'wifi') type = 'wifi';
+    else if (t === 'cellular') type = 'cellular';
+    else if (t === 'ethernet') type = 'ethernet';
+    else if (eff) type = eff.includes('4g') ? 'wifi' : 'cellular';
+
+    const parts = [];
+    if (eff) parts.push(eff.toUpperCase());
+    if (down != null) parts.push(down + ' Mbps');
+    if (rtt != null) parts.push(rtt + ' ms');
+    speed = parts.join(' · ');
+
+    if (eff === 'slow-2g' || eff === '2g' || (down != null && down < 1)) {
+      netChip.classList.add('slow');
+    }
+  }
+
+  netIcon.innerHTML = NET_ICONS[type] || NET_ICONS.unknown;
+  netType.textContent = type === 'unknown' ? 'online' : type;
+  netSpeed.textContent = speed || 'koneksi aktif';
+}
+
+window.addEventListener('online', netUpdate);
+window.addEventListener('offline', netUpdate);
+
+const _conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+if (_conn && _conn.addEventListener){
+  _conn.addEventListener('change', netUpdate);
+}
+setInterval(netUpdate, 5000);
+netUpdate();
+
+netChip.addEventListener('click', ()=>{
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const online = navigator.onLine;
+  const info = {
+    status: online ? 'online' : 'offline',
+    tipe: conn?.type || '—',
+    kecepatan: conn?.effectiveType || '—',
+    downlink: conn?.downlink != null ? conn.downlink + ' Mbps' : '—',
+    rtt: conn?.rtt != null ? conn.rtt + ' ms' : '—',
+    hemat_data: conn?.saveData ? 'aktif' : 'nonaktif',
+    user_agent: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop',
+    platform: navigator.platform || '—'
+  };
+
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(6,1,2,.8);backdrop-filter:blur(16px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML = `
+    <div class="confirm-box" style="max-width:460px;width:100%;text-align:left">
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="width:64px;height:64px;margin:0 auto 12px;border-radius:20px;display:grid;place-items:center;background:radial-gradient(circle,rgba(78,230,160,.22),transparent 70%)">
+          <div style="width:32px;height:32px;color:var(--ok)">${NET_ICONS[info.tipe === 'wifi' ? 'wifi' : info.tipe === 'cellular' ? 'cellular' : 'unknown']}</div>
+        </div>
+        <h3 style="margin:0 0 4px;font-size:17px;font-weight:800">detail jaringan</h3>
+        <div class="muted">data real-time dari browser</div>
+      </div>
+      <div class="net-detail">
+        <div class="nd"><div class="k">status</div><div class="v" style="color:${online ? 'var(--ok)' : 'var(--err)'}">${info.status}</div></div>
+        <div class="nd"><div class="k">tipe</div><div class="v">${info.tipe}</div></div>
+        <div class="nd"><div class="k">kecepatan</div><div class="v">${info.kecepatan}</div></div>
+        <div class="nd"><div class="k">downlink</div><div class="v">${info.downlink}</div></div>
+        <div class="nd"><div class="k">latensi</div><div class="v">${info.rtt}</div></div>
+        <div class="nd"><div class="k">hemat data</div><div class="v">${info.hemat_data}</div></div>
+        <div class="nd" style="grid-column:1/-1"><div class="k">platform</div><div class="v">${info.platform} · ${info.user_agent}</div></div>
+      </div>
+      <button class="btn ghost block" id="netClose" style="margin-top:16px">tutup</button>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#netClose').addEventListener('click', ()=> modal.remove());
+  modal.addEventListener('click', (e)=>{ if (e.target === modal) modal.remove(); });
+});
+
+/* ===== TOOLS: SFL BYPASS, FAKE LOBBY, ALL DOWNLOADER ===== */
+(function(){
+  const enc = encodeURIComponent;
+  const loaderHtml = t => '<div class="card glass"><div class="verify-visual"><div class="spinner"></div><div class="verify-text">'+esc(t)+'</div></div></div>';
+  const errBox = m => '<div class="card glass"><div class="empty-state"><div class="muted">'+esc(m)+'</div></div></div>';
+  const safeUrl = u => { try{ const x=new URL(u); return /^https?:$/.test(x.protocol) ? x.href : null; }catch(e){ return null; } };
+  async function getJSON(url, ms){
+    const c=new AbortController(), t=setTimeout(()=>c.abort(), ms||15000);
+    try{ const r=await fetch(url,{signal:c.signal}); return await r.json(); } finally{ clearTimeout(t); }
+  }
+  function linkRow(label, url){
+    return '<div class="dep-row"><span class="badge ready"><span class="d"></span>'+esc(label)+'</span>'
+      +'<div class="dmeta"><div class="durl">'+esc(url)+'</div></div>'
+      +'<button class="btn ghost" data-open="'+esc(url)+'" style="padding:7px 11px;font-size:11.5px">buka</button>'
+      +'<button class="btn ghost" data-copy="'+esc(url)+'" style="padding:7px 11px;font-size:11.5px">salin</button></div>';
+  }
+  document.addEventListener('click', e=>{
+    const o=e.target.closest('[data-open]');
+    if (o){ window.open(o.dataset.open,'_blank','noopener'); return; }
+    const c=e.target.closest('[data-copy]');
+    if (c) navigator.clipboard.writeText(c.dataset.copy).then(()=>toast('tersalin','ok'),()=>toast('gagal menyalin','err'));
+  });
+  function pasteInto(sel){
+    navigator.clipboard.readText().then(t=>{ $(sel).value=t.trim(); }, ()=>toast('izin clipboard ditolak','err'));
+  }
+  async function busy(btns, fn){
+    btns.forEach(b=>b.disabled=true);
+    try{ await fn(); } finally{ btns.forEach(b=>b.disabled=false); }
+  }
+
+  /* --- SFL BYPASS --- */
+  $('#btnSflPaste').addEventListener('click', ()=>pasteInto('#sflLink'));
+  $('#btnSfl').addEventListener('click', ()=> busy([$('#btnSfl')], async ()=>{
+    const l=$('#sflLink').value.trim(), r=$('#sflRes');
+    if (!safeUrl(l)){ toast('isi link sfl yang valid','err'); return; }
+    r.innerHTML=loaderHtml('mem-bypass link...');
+    // dua endpoint tidak resmi: kalau satu gagal lanjut ke berikutnya
+    const eps=[ 'https://api.ikyyxd.my.id/tools/skiplink/sfl?url='+enc(l), 'https://api.agatz.xyz/api/sfl?url='+enc(l) ];
+    let dest=null;
+    for (const ep of eps){
+      try{
+        const d=await getJSON(ep);
+        const raw=(d&&d.result&&(d.result.destinationUrl||d.result.url))||(d&&typeof d.result==='string'?d.result:'');
+        dest=safeUrl(raw);
+        if (dest) break;
+      }catch(e){}
+    }
+    r.innerHTML = dest ? '<div class="card glass">'+linkRow('hasil',dest)+'</div>' : errBox('gagal: semua API tidak merespon');
+  }));
+
+  /* --- FAKE LOBBY FF --- */
+  let ffUrl=null;
+  $('#btnFfRand').addEventListener('click', ()=>{
+    const a=['kyel','elky','pro','nyx'];
+    $('#ffName').value=a[Math.floor(Math.random()*a.length)]+Math.floor(Math.random()*90);
+  });
+  $('#btnFf').addEventListener('click', ()=> busy([$('#btnFf')], async ()=>{
+    const n=$('#ffName').value.trim(), r=$('#ffRes');
+    if (!n){ toast('isi nickname dulu','err'); return; }
+    r.innerHTML=loaderHtml('membuat lobby...');
+    try{
+      const res=await fetch('https://api.azbry.com/api/maker/fakeff?name='+enc(n));
+      const blob=await res.blob();
+      if (!blob.type.startsWith('image/')) throw new Error('bukan gambar');
+      if (ffUrl) URL.revokeObjectURL(ffUrl);
+      ffUrl=URL.createObjectURL(blob);
+      r.innerHTML='<div class="card glass"><img src="'+ffUrl+'" alt="fake lobby" style="width:100%;border-radius:10px;border:1px solid var(--line);display:block">'
+        +'<a class="btn primary block" href="'+ffUrl+'" download="fake-lobby-'+esc(n)+'.png" style="margin-top:12px;text-decoration:none">download gambar</a></div>';
+    }catch(e){ r.innerHTML=errBox('gagal membuat lobby'); }
+  }));
+
+  /* --- ALL DOWNLOADER --- */
+  $('#btnDlPaste').addEventListener('click', ()=>pasteInto('#dlLink'));
+  const detect = u => /tiktok\.com/i.test(u)?'tiktok' : /instagram\.com/i.test(u)?'instagram' : /youtu\.?be/i.test(u)?'youtube'
+    : /(^|\/\/|\.)(twitter|x)\.com/i.test(u)?'twitter' : /facebook\.com|fb\.watch/i.test(u)?'facebook' : 'lain';
+  function walk(o,key,out){
+    if (typeof o==='string'){ if (/^https?:\/\//i.test(o)) out.push([key,o]); }
+    else if (o && typeof o==='object'){ for (const k in o) walk(o[k],k,out); }
+  }
+  function pick(list,kind){
+    const bad=/(cover|thumb|avatar|image|poster|photo|icon)/i;
+    const good=list.filter(([k,u])=>!bad.test(k) && !/\.(jpe?g|png|webp|gif)(\?|$)/i.test(u));
+    const re = kind==='mp3' ? /(mp3|audio|music|sound)/i : /(mp4|video|play|download|hd|url)/i;
+    const hit=good.find(([k,u])=>re.test(k)||re.test(u));
+    return hit ? hit[1] : (kind==='mp3' ? null : (good[0]||[])[1]||null);
+  }
+  async function fetchMedia(u,kind){
+    const p=detect(u);
+    if (p==='tiktok'){
+      try{
+        const d=await getJSON('https://www.tikwm.com/api/?url='+enc(u));
+        let x = d && d.data ? (kind==='mp3' ? d.data.music : (d.data.hdplay||d.data.play)) : null;
+        if (x && x.startsWith('/')) x='https://www.tikwm.com'+x;
+        const s=safeUrl(x); if (s) return s;
+      }catch(e){}
+    }
+    const map={ youtube: kind==='mp3'?'ytmp3':'ytmp4', instagram:'instagram', twitter:'twitter', facebook:'facebook', tiktok:'tiktok' };
+    if (!map[p]) return null;
+    try{
+      const d=await getJSON('https://api.agatz.xyz/api/'+map[p]+'?url='+enc(u));
+      const list=[]; walk(d && d.data!=null ? d.data : d,'',list);
+      return safeUrl(pick(list,kind));
+    }catch(e){}
+    return null;
+  }
+  async function runDl(kind){
+    const u=$('#dlLink').value.trim(), r=$('#dlRes');
+    if (!safeUrl(u)){ toast('tempel link yang valid','err'); return; }
+    r.innerHTML=loaderHtml(kind==='mp3'?'mengambil audio...':'mengambil video...');
+    const url=await fetchMedia(u,kind);
+    if (!url){ r.innerHTML=errBox('gagal: API tidak mengembalikan file. Coba link lain atau ulangi nanti.'); return; }
+    const player = kind==='mp3'
+      ? '<audio src="'+esc(url)+'" controls style="width:100%;margin-bottom:12px"></audio>'
+      : '<video src="'+esc(url)+'" controls playsinline style="width:100%;border-radius:10px;margin-bottom:12px;background:#000"></video>';
+    r.innerHTML='<div class="card glass">'+player+linkRow(kind,url)+'</div>';
+  }
+  $('#btnMp4').addEventListener('click', ()=> busy([$('#btnMp4'),$('#btnMp3')], ()=>runDl('mp4')));
+  $('#btnMp3').addEventListener('click', ()=> busy([$('#btnMp4'),$('#btnMp3')], ()=>runDl('mp3')));
+})();
+
+/* ===== ANIMASI: ring progress + accordion limit ===== */
+(function(){
+  const fillEl=$('#progFill'), ringFl=$('#ringFl'), ringNum=$('#ringNum');
+  let ringVal=0, ringRaf=0;
+  function ringTo(t){
+    t=Math.max(0,Math.min(100,t));
+    if(t===ringVal) return;
+    cancelAnimationFrame(ringRaf);
+    ringFl.style.strokeDashoffset = 289*(1-t/100);
+    const from=ringVal, s=performance.now(), d=600;
+    ringVal=t;
+    (function f(n){
+      const p=Math.min((n-s)/d,1), e=1-Math.pow(1-p,4);
+      ringNum.textContent=Math.round(from+(t-from)*e)+'%';
+      if(p<1) ringRaf=requestAnimationFrame(f);
+    })(s);
+  }
+  new MutationObserver(()=>ringTo(parseFloat(fillEl.style.width)||0))
+    .observe(fillEl,{attributes:true,attributeFilter:['style']});
+
+  const lc=$('#limitCard'), head=lc.querySelector('.limit-head'), LK='deployer_limit_collapsed_v1';
+  head.setAttribute('role','button'); head.setAttribute('tabindex','0');
+  function setCollapsed(c){ lc.classList.toggle('collapsed',c); head.setAttribute('aria-expanded',String(!c)); }
+  let saved='0'; try{ saved=localStorage.getItem(LK)||'0'; }catch(e){}
+  setCollapsed(saved==='1');
+  function toggle(){ const c=!lc.classList.contains('collapsed'); setCollapsed(c); try{ localStorage.setItem(LK,c?'1':'0'); }catch(e){} }
+  head.addEventListener('click',toggle);
+  head.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+})();
+
+/* ===== INIT ===== */
+renderAcctChip();
+renderProjects();
+
+(async ()=>{
+  if (ghToken){
+    try{
+      ghUser = await ghGetUser();
+      renderGhUser();
+      await loadGhRepos();
+    } catch(e){
+      ghToken = ''; localStorage.removeItem(GH_KEY);
+      renderGhUser();
+    }
+  } else {
+    renderGhUser();
+  }
+})();
+
+})();
+  </script>
+ </body>
+</html>
+<script async="" data-account-tier="free" data-app-host="app.netlify.com" data-netlify-site-id="09acdd14-455e-4190-b291-a010c558b9c6" data-nf-variant="public" src="/.netlify/scripts/hud?variant=public">
+</script>
